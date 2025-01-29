@@ -123,3 +123,24 @@ button:active {
   font-weight: 600;
   cursor: pointer;
 }
+.signin-link {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.signin-link p {
+  font-size: 0.95rem;
+}
+
+.signin-link button {
+  background: none;
+  border: none;
+  color: #000;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.signin-link button:hover {
+  text-decoration: underline;
+}

@@ -19,4 +19,7 @@ export class RegisterComponent {
       alert(error.message)
     })
   }
+  onLogin(){
+    this.router.navigate(['/auth/login']);
+  }
 }
