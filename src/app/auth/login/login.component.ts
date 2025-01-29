@@ -42,4 +42,7 @@ export class LoginComponent {
   onRegister(){
     this.router.navigate(['/auth/register']);
   }
+  forgotPassword(){
+    this.router.navigate(['/auth/forgot-password'])
+  }
 }
