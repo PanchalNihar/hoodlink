@@ -1,0 +1,22 @@
+<div *ngIf="isLoading" class="loading-screen">
+    <p>Loading user data...</p>
+  </div>
+  
+  <div *ngIf="!isLoading">
+    <h1>Welcome, {{ userEmail }}!</h1>
+  
+    <div *ngIf="userRole === 'admin'">
+      <h2>Admin Dashboard</h2>
+      <p>As an admin, you can manage users, view reports, and more.</p>
+      <!-- Add admin-specific content here -->
+      <button class="btn btn-danger" (click)="logout()">Logout</button>
+    </div>
+  
+    <div *ngIf="userRole === 'member'">
+      <h2>Member Dashboard</h2>
+      <p>As a member, you can view your profile, submit complaints, and more.</p>
+      <!-- Add member-specific content here -->
+      <button class="btn btn-danger" (click)="logout()">Logout</button>
+    </div>
+  </div>
+  
