@@ -16,6 +16,7 @@ import { Subscription } from 'rxjs';
 export class DashboardComponent implements OnInit, OnDestroy {
   userRole: string = '';
   userEmail: string = '';
+  username: string = '';
   isLoading: boolean = true;
   private authStateSubscription?: Subscription;
 
@@ -45,7 +46,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
     });
 
-    // Store unsubscribe function to call on destroy
     this.authStateSubscription = new Subscription(() => unsubscribe());
   }
 
@@ -53,11 +53,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
     try {
       const userDocsRef = doc(this.firestore, 'users', user.uid);
       const userDoc = await getDoc(userDocsRef);
-      
+      console.log("user doc:",userDoc)
+      console.log("user doc ref:",userDocsRef)
       if (userDoc.exists()) {
         const userData = userDoc.data();
         this.userRole = userData['role'] || '';
         this.userEmail = user.email || '';
+        this.username = userData['username'] || '';
         this.isLoading = false;
 
         if (!this.userRole) {
@@ -78,5 +80,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   async logout() {
     await this.authService.signOut();
+    this.router.navigate(['/auth/login']);
   }
 }

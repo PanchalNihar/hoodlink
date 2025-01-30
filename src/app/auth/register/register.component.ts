@@ -10,12 +10,13 @@ import { Router } from '@angular/router';
   styleUrl: './register.component.css',
 })
 export class RegisterComponent {
+  username:string=''
   email: string = '';
   password: string = '';
   role: 'admin' | 'member' = 'member';
   constructor(private authService:AuthService,private router:Router){}
   register(){
-    this.authService.register(this.email,this.password,this.role).catch((error)=>{
+    this.authService.register(this.email,this.password,this.role,this.username).catch((error)=>{
       alert(error.message)
     })
   }

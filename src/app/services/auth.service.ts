@@ -65,7 +65,7 @@ export class AuthService {
     }
   }
 
-  async register(email: string, password: string, role: 'admin' | 'member') {
+  async register(email: string, password: string, role: 'admin' | 'member',username:string) {
     try {
       const userCredential = await firebaseCreateUser(
         this.auth,
@@ -73,7 +73,7 @@ export class AuthService {
         password
       );
       const user = userCredential.user;
-
+      console.log("User",user)
       if (!user) {
         throw new Error('No user created');
       }
@@ -84,6 +84,8 @@ export class AuthService {
         uid: user.uid,
         email: user.email,
         role: role,
+        username:username,
+        createdAt:new Date().toISOString()
       });
 
       await this.router.navigate(['/dashboard']);

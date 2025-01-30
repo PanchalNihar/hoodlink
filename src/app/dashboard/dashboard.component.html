@@ -1,22 +1,43 @@
-<div *ngIf="isLoading" class="loading-screen">
-    <p>Loading user data...</p>
-  </div>
-  
-  <div *ngIf="!isLoading">
-    <h1>Welcome, {{ userEmail }}!</h1>
-  
-    <div *ngIf="userRole === 'admin'">
-      <h2>Admin Dashboard</h2>
-      <p>As an admin, you can manage users, view reports, and more.</p>
-      <!-- Add admin-specific content here -->
-      <button class="btn btn-danger" (click)="logout()">Logout</button>
+<div class="dashboard-container">
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <h2 class="logo">HoodLink</h2>
+    <ul>
+      <li [class.active]="userRole === 'admin'">
+        <a *ngIf="userRole === 'admin'" routerLink="/admin">Admin Panel</a>
+      </li>
+      <li [class.active]="userRole === 'member'">
+        <a *ngIf="userRole === 'member'" routerLink="/profile">Profile</a>
+      </li>
+      <li>
+        <a routerLink="/settings">Settings</a>
+      </li>
+      <li>
+        <button class="btn btn-danger w-100" (click)="logout()">Logout</button>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="header">
+      <h1>Welcome, {{ username }}</h1>
     </div>
-  
-    <div *ngIf="userRole === 'member'">
-      <h2>Member Dashboard</h2>
-      <p>As a member, you can view your profile, submit complaints, and more.</p>
-      <!-- Add member-specific content here -->
-      <button class="btn btn-danger" (click)="logout()">Logout</button>
+
+    <div class="dashboard-content">
+      <div *ngIf="userRole === 'admin'" class="admin-section">
+        <h2>Admin Dashboard</h2>
+        <p>You can manage users, view reports, and more.</p>
+        <button class="btn btn-primary">Manage Users</button>
+        <button class="btn btn-warning">View Reports</button>
+      </div>
+
+      <div *ngIf="userRole === 'member'" class="member-section">
+        <h2>Member Dashboard</h2>
+        <p>View your profile, submit complaints, and interact with the community.</p>
+        <button class="btn btn-success">Submit Complaint</button>
+        <button class="btn btn-info">View Bookings</button>
+      </div>
     </div>
   </div>
-  
+</div>
