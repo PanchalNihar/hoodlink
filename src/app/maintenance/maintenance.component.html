@@ -1,0 +1,92 @@
+<div class="content-wrapper" [class.content-wrapper-collapsed]="sidebar.isCollapsed">
+  <app-side-bar #sidebar></app-side-bar>
+  
+  <div class="maintenance-container">
+    <div class="main-content">
+      <!-- Header Section -->
+      <div class="header">
+        <div class="welcome-section">
+          <h1>Maintenance Requests</h1>
+          <p class="subtitle">Track and manage maintenance requests</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-primary">
+            <i class="fas fa-plus"></i>
+            New Request
+          </button>
+        </div>
+      </div>
+
+      <!-- Maintenance Content -->
+      <div class="maintenance-content">
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+          <div class="stats-card">
+            <div class="stats-icon pending">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div class="stats-info">
+              <h3>Pending</h3>
+              <p class="stats-number">5</p>
+            </div>
+          </div>
+
+          <div class="stats-card">
+            <div class="stats-icon progress">
+              <i class="fas fa-tools"></i>
+            </div>
+            <div class="stats-info">
+              <h3>In Progress</h3>
+              <p class="stats-number">3</p>
+            </div>
+          </div>
+
+          <div class="stats-card">
+            <div class="stats-icon completed">
+              <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stats-info">
+              <h3>Completed</h3>
+              <p class="stats-number">12</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Active Requests -->
+        <div class="requests-section">
+          <h2>Active Requests</h2>
+          
+          <div class="request-card">
+            <div class="request-status pending">Pending</div>
+            <div class="request-info">
+              <h3>Plumbing Issue</h3>
+              <p>Leaking faucet in kitchen sink</p>
+              <div class="request-meta">
+                <span><i class="fas fa-calendar"></i> Reported: Jan 28, 2025</span>
+                <span><i class="fas fa-map-marker-alt"></i> Unit 301</span>
+              </div>
+            </div>
+            <div class="request-priority high">
+              High Priority
+            </div>
+          </div>
+
+          <div class="request-card">
+            <div class="request-status progress">In Progress</div>
+            <div class="request-info">
+              <h3>Electrical Repair</h3>
+              <p>Power outlet not working in living room</p>
+              <div class="request-meta">
+                <span><i class="fas fa-calendar"></i> Reported: Jan 25, 2025</span>
+                <span><i class="fas fa-map-marker-alt"></i> Unit 205</span>
+              </div>
+            </div>
+            <div class="request-priority medium">
+              Medium Priority
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

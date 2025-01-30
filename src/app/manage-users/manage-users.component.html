@@ -1,0 +1,44 @@
+<div class="manage-users-container">
+  <div class="header">
+    <h1>Manage Users</h1>
+  </div>
+
+  <div class="users-content">
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-state">
+      <p>Loading users...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error" class="error-state">
+      <p>{{ error }}</p>
+    </div>
+
+    <!-- Users List -->
+    <div *ngIf="!isLoading && !error" class="users-list">
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Created At</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+              <span [class]="'role-badge ' + user.role">
+                {{ user.role }}
+              </span>
+            </td>
+            <td>{{ user.createdAt | date : "medium" }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <button class="btn btn-success" (click)="backToDashboard()">Back To Dashboard</button>
+    </div>
+  </div>
+</div>

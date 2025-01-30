@@ -1,0 +1,116 @@
+<div class="content-wrapper" [class.content-wrapper-collapsed]="sidebar.isCollapsed">
+  <app-side-bar #sidebar></app-side-bar>
+  
+  <div class="documents-container">
+    <div class="main-content">
+      <!-- Header Section -->
+      <div class="header">
+        <div class="welcome-section">
+          <h1>Documents</h1>
+          <p class="subtitle">Access and manage your documents</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-primary">
+            <i class="fas fa-upload"></i>
+            Upload Document
+          </button>
+        </div>
+      </div>
+
+      <!-- Documents Content -->
+      <div class="documents-content">
+        <!-- Categories Section -->
+        <div class="categories-section">
+          <div class="category-card">
+            <div class="category-icon">
+              <i class="fas fa-file-contract"></i>
+            </div>
+            <h3>Contracts</h3>
+            <p>12 documents</p>
+          </div>
+
+          <div class="category-card">
+            <div class="category-icon">
+              <i class="fas fa-file-invoice"></i>
+            </div>
+            <h3>Invoices</h3>
+            <p>28 documents</p>
+          </div>
+
+          <div class="category-card">
+            <div class="category-icon">
+              <i class="fas fa-file-alt"></i>
+            </div>
+            <h3>Reports</h3>
+            <p>15 documents</p>
+          </div>
+
+          <div class="category-card">
+            <div class="category-icon">
+              <i class="fas fa-file-pdf"></i>
+            </div>
+            <h3>Forms</h3>
+            <p>8 documents</p>
+          </div>
+        </div>
+
+        <!-- Recent Documents -->
+        <div class="recent-documents">
+          <h2>Recent Documents</h2>
+          
+          <div class="documents-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Category</th>
+                  <th>Date Modified</th>
+                  <th>Size</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="document-name">
+                      <i class="fas fa-file-pdf"></i>
+                      <span>Community_Guidelines_2025.pdf</span>
+                    </div>
+                  </td>
+                  <td>Guidelines</td>
+                  <td>Jan 30, 2025</td>
+                  <td>2.3 MB</td>
+                  <td>
+                    <div class="table-actions">
+                      <button class="btn-icon"><i class="fas fa-download"></i></button>
+                      <button class="btn-icon"><i class="fas fa-share"></i></button>
+                      <button class="btn-icon"><i class="fas fa-trash"></i></button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="document-name">
+                      <i class="fas fa-file-word"></i>
+                      <span>Meeting_Minutes_Jan2025.doc</span>
+                    </div>
+                  </td>
+                  <td>Minutes</td>
+                  <td>Jan 28, 2025</td>
+                  <td>1.1 MB</td>
+                  <td>
+                    <div class="table-actions">
+                      <button class="btn-icon"><i class="fas fa-download"></i></button>
+                      <button class="btn-icon"><i class="fas fa-share"></i></button>
+                      <button class="btn-icon"><i class="fas fa-trash"></i></button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

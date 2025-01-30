@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { DashboardComponent } from "../../dashboard/dashboard.component";
+import { SideBarComponent } from "../../side-bar/side-bar.component";
 
 @Component({
   selector: 'app-admin',

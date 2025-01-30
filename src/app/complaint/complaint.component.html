@@ -1,0 +1,79 @@
+<div class="content-wrapper" [class.content-wrapper-collapsed]="sidebar.isCollapsed">
+  <app-side-bar #sidebar></app-side-bar>
+  
+  <div class="complaints-container">
+    <div class="main-content">
+      <!-- Header Section -->
+      <div class="header">
+        <div class="welcome-section">
+          <h1>Complaints Management</h1>
+          <p class="subtitle">Track and resolve community issues</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-primary">
+            <i class="fas fa-plus-circle"></i>
+            File Complaint
+          </button>
+        </div>
+      </div>
+
+      <!-- Complaints Content -->
+      <div class="complaints-content">
+        <!-- Filter Section -->
+        <div class="filters-section">
+          <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search complaints...">
+          </div>
+          <div class="filter-buttons">
+            <button class="filter-btn active">All</button>
+            <button class="filter-btn">Open</button>
+            <button class="filter-btn">In Progress</button>
+            <button class="filter-btn">Resolved</button>
+          </div>
+        </div>
+
+        <!-- Complaints List -->
+        <div class="complaints-list">
+          <div class="complaint-card">
+            <div class="complaint-header">
+              <span class="complaint-id">#2025-001</span>
+              <span class="status-badge open">Open</span>
+            </div>
+            <div class="complaint-body">
+              <h3>Noise Complaint</h3>
+              <p>Excessive noise from unit above during quiet hours</p>
+              <div class="complaint-meta">
+                <span><i class="fas fa-calendar"></i> Filed: Jan 29, 2025</span>
+                <span><i class="fas fa-user"></i> John Doe</span>
+              </div>
+            </div>
+            <div class="complaint-actions">
+              <button class="btn btn-sm btn-primary">Update</button>
+              <button class="btn btn-sm btn-success">Resolve</button>
+            </div>
+          </div>
+
+          <div class="complaint-card">
+            <div class="complaint-header">
+              <span class="complaint-id">#2025-002</span>
+              <span class="status-badge in-progress">In Progress</span>
+            </div>
+            <div class="complaint-body">
+              <h3>Parking Violation</h3>
+              <p>Unauthorized vehicle in reserved parking space</p>
+              <div class="complaint-meta">
+                <span><i class="fas fa-calendar"></i> Filed: Jan 28, 2025</span>
+                <span><i class="fas fa-user"></i> Jane Smith</span>
+              </div>
+            </div>
+            <div class="complaint-actions">
+              <button class="btn btn-sm btn-primary">Update</button>
+              <button class="btn btn-sm btn-success">Resolve</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

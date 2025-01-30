@@ -1,0 +1,175 @@
+/* complaints.component.css */
+.complaints-container {
+    min-height: 100vh;
+    margin-left: 250px;
+    background: #f8f9fa;
+    transition: margin-left 0.3s ease;
+  }
+  
+  .main-content {
+    padding: 2rem;
+  }
+  
+  .header {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  
+  .filters-section {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  
+  .search-bar {
+    display: flex;
+    align-items: center;
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .search-bar input {
+    border: none;
+    background: transparent;
+    margin-left: 0.5rem;
+    width: 100%;
+    font-size: 1rem;
+    color: #4a5568;
+  }
+  
+  .search-bar i {
+    color: #a0aec0;
+  }
+  
+  .filter-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .filter-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    background: white;
+    color: #4a5568;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .filter-btn:hover {
+    background: #f7fafc;
+  }
+  
+  .filter-btn.active {
+    background: #4299e1;
+    color: white;
+    border-color: #4299e1;
+  }
+  
+  .complaint-card {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  
+  .complaint-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .complaint-id {
+    color: #718096;
+    font-size: 0.875rem;
+  }
+  
+  .status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  
+  .status-badge.open {
+    background: #fed7d7;
+    color: #e53e3e;
+  }
+  
+  .status-badge.in-progress {
+    background: #feebc8;
+    color: #dd6b20;
+  }
+  
+  .complaint-body h3 {
+    color: #2d3748;
+    margin-bottom: 0.5rem;
+  }
+  
+  .complaint-body p {
+    color: #718096;
+    margin-bottom: 1rem;
+  }
+  
+  .complaint-meta {
+    display: flex;
+    gap: 1.5rem;
+    color: #a0aec0;
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+  }
+  
+  .complaint-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .complaint-actions {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .btn-sm {
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    border: none;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .complaints-container {
+      margin-left: 70px;
+    }
+  
+    .header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+  
+    .complaint-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+  
+    .complaint-meta {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }

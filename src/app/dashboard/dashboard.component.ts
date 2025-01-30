@@ -5,11 +5,12 @@ import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
 import { doc, Firestore, getDoc } from '@angular/fire/firestore';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
+import { SideBarComponent } from "../side-bar/side-bar.component";
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SideBarComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
@@ -18,6 +19,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   userEmail: string = '';
   username: string = '';
   isLoading: boolean = true;
+  today = new Date();
   private authStateSubscription?: Subscription;
 
   constructor(
@@ -81,5 +83,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   async logout() {
     await this.authService.signOut();
     this.router.navigate(['/auth/login']);
+  }
+  manageUser(){
+    this.router.navigate(['/manage-user'])
   }
 }

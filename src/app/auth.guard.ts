@@ -7,6 +7,13 @@ export const authGuard = () => {
   const router = inject(Router);
 
   return new Promise((resolve) => {
+    // Check if we already have a user
+    if (auth.currentUser) {
+      resolve(true);
+      return;
+    }
+
+    // If no current user, wait for the auth state to initialize
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       unsubscribe();
       if (user) {
