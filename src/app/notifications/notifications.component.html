@@ -10,82 +10,110 @@
           <p class="subtitle">Stay updated with your latest alerts</p>
         </div>
         <div class="header-actions">
-          <button class="btn btn-primary">
+          <button class="btn btn-primary me-4" (click)="markAllAsRead()">
             <i class="fas fa-check-double"></i>
             Mark All as Read
+          </button>
+          <!-- Admin-only create button -->
+          <button *ngIf="isAdmin" class="btn btn-success" (click)="toggleCreateForm()">
+            <i class="fas fa-plus"></i>
+            {{ showCreateForm ? 'Cancel' : 'Create Notification' }}
           </button>
         </div>
       </div>
 
+      <!-- Admin Create Form -->
+      <div class="create-notification-form mb-4" *ngIf="showCreateForm && isAdmin">
+        <form [formGroup]="notificationForm" (ngSubmit)="createNewNotification()" class="bg-white p-4 rounded shadow">
+          <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" id="title" formControlName="title" class="form-control" placeholder="Notification Title">
+            <div class="text-danger" *ngIf="notificationForm.get('title')?.touched && notificationForm.get('title')?.invalid">
+              Title is required
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="message" class="form-label">Message</label>
+            <textarea id="message" formControlName="message" class="form-control" rows="3" placeholder="Notification Message"></textarea>
+            <div class="text-danger" *ngIf="notificationForm.get('message')?.touched && notificationForm.get('message')?.invalid">
+              Message is required
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="type" class="form-label">Type</label>
+            <select id="type" formControlName="type" class="form-control">
+              <option value="info">Info</option>
+              <option value="alert">Alert</option>
+              <option value="success">Success</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary" [disabled]="notificationForm.invalid">
+            Create Notification
+          </button>
+        </form>
+      </div>
+
       <!-- Notifications Content -->
       <div class="notifications-content">
-        <!-- Unread Notifications -->
-        <div class="notification-section">
-          <h2>New Notifications</h2>
-          
-          <div class="notification-card unread">
-            <div class="notification-icon">
-              <i class="fas fa-bell"></i>
-            </div>
-            <div class="notification-content">
-              <h3>Maintenance Scheduled</h3>
-              <p>Building maintenance is scheduled for tomorrow at 10:00 AM</p>
-              <span class="notification-time">2 hours ago</span>
-            </div>
-            <div class="notification-actions">
-              <button class="btn-icon"><i class="fas fa-check"></i></button>
-              <button class="btn-icon"><i class="fas fa-trash"></i></button>
-            </div>
-          </div>
-
-          <div class="notification-card unread">
-            <div class="notification-icon alert">
-              <i class="fas fa-exclamation-circle"></i>
-            </div>
-            <div class="notification-content">
-              <h3>Complaint Update</h3>
-              <p>Your recent complaint #1234 has been addressed</p>
-              <span class="notification-time">5 hours ago</span>
-            </div>
-            <div class="notification-actions">
-              <button class="btn-icon"><i class="fas fa-check"></i></button>
-              <button class="btn-icon"><i class="fas fa-trash"></i></button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Earlier Notifications -->
-        <div class="notification-section">
-          <h2>Earlier</h2>
-          
-          <div class="notification-card">
-            <div class="notification-icon info">
-              <i class="fas fa-info-circle"></i>
-            </div>
-            <div class="notification-content">
-              <h3>Document Uploaded</h3>
-              <p>New community guidelines have been uploaded</p>
-              <span class="notification-time">Yesterday</span>
-            </div>
-            <div class="notification-actions">
-              <button class="btn-icon"><i class="fas fa-trash"></i></button>
+        <ng-container *ngIf="notifications$ | async as notifications">
+          <!-- Unread Notifications -->
+          <div class="notification-section" *ngIf="hasUnreadNotifications(notifications)">
+            <h2>New Notifications</h2>
+            
+            <div class="notification-card unread" *ngFor="let notification of getUnreadNotifications(notifications)">
+              <div class="notification-icon" [ngClass]="notification.type">
+                <i class="fas" [ngClass]="{
+                  'fa-info-circle': notification.type === 'info',
+                  'fa-exclamation-circle': notification.type === 'alert',
+                  'fa-check-circle': notification.type === 'success',
+                  'fa-bell': !notification.type
+                }"></i>
+              </div>
+              <div class="notification-content">
+                <h3>{{ notification.title }}</h3>
+                <p>{{ notification.message }}</p>
+                <span class="notification-time">{{ notification.createdAt | date:'medium' }}</span>
+              </div>
+              <div class="notification-actions">
+                <button class="btn-icon" (click)="markAllAsRead()">
+                  <i class="fas fa-check"></i>
+                </button>
+                <button class="btn-icon" *ngIf="isAdmin" (click)="deleteNotification(notification.id)">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
             </div>
           </div>
 
-          <div class="notification-card">
-            <div class="notification-icon success">
-              <i class="fas fa-check-circle"></i>
-            </div>
-            <div class="notification-content">
-              <h3>Payment Confirmed</h3>
-              <p>Monthly maintenance payment has been received</p>
-              <span class="notification-time">2 days ago</span>
-            </div>
-            <div class="notification-actions">
-              <button class="btn-icon"><i class="fas fa-trash"></i></button>
+          <!-- Read Notifications -->
+          <div class="notification-section" *ngIf="hasReadNotifications(notifications)">
+            <h2>Earlier</h2>
+            
+            <div class="notification-card" *ngFor="let notification of getReadNotifications(notifications)">
+              <div class="notification-icon" [ngClass]="notification.type">
+                <i class="fas" [ngClass]="{
+                  'fa-info-circle': notification.type === 'info',
+                  'fa-exclamation-circle': notification.type === 'alert',
+                  'fa-check-circle': notification.type === 'success',
+                  'fa-bell': !notification.type
+                }"></i>
+              </div>
+              <div class="notification-content">
+                <h3>{{ notification.title }}</h3>
+                <p>{{ notification.message }}</p>
+                <span class="notification-time">{{ notification.createdAt | date:'medium' }}</span>
+              </div>
+              <div class="notification-actions">
+                <button class="btn-icon" *ngIf="isAdmin" (click)="deleteNotification(notification.id)">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        </ng-container>
       </div>
     </div>
   </div>

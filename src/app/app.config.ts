@@ -13,6 +13,8 @@ import { environment } from '../environments/environment';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { provideStorage, getStorage } from '@angular/fire/storage';
+import {  } from '@angular/forms';
+import { provideAnimations } from '@angular/platform-browser/animations';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
@@ -22,6 +24,8 @@ export const appConfig: ApplicationConfig = {
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
     provideStorage(() => getStorage()),
+    // provideFormControls(),
+    provideAnimations(),
     { provide: FIREBASE_OPTIONS, useValue: environment.firebaseConfig },
     AngularFirestoreModule,
   ],
