@@ -87,4 +87,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   manageUser(){
     this.router.navigate(['/manage-user'])
   }
+  goToNotification(){
+    this.router.navigate(['/notifications'])
+  }
 }

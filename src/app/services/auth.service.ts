@@ -6,7 +6,7 @@ import {
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, first, firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -65,7 +65,12 @@ export class AuthService {
     }
   }
 
-  async register(email: string, password: string, role: 'admin' | 'member',username:string) {
+  async register(
+    email: string,
+    password: string,
+    role: 'admin' | 'member',
+    username: string
+  ) {
     try {
       const userCredential = await firebaseCreateUser(
         this.auth,
@@ -73,7 +78,7 @@ export class AuthService {
         password
       );
       const user = userCredential.user;
-      console.log("User",user)
+      console.log('User', user);
       if (!user) {
         throw new Error('No user created');
       }
@@ -84,8 +89,8 @@ export class AuthService {
         uid: user.uid,
         email: user.email,
         role: role,
-        username:username,
-        createdAt:new Date().toISOString()
+        username: username,
+        createdAt: new Date().toISOString(),
       });
 
       await this.router.navigate(['/dashboard']);
@@ -103,5 +108,13 @@ export class AuthService {
       console.error('Sign out error:', error);
       throw error;
     }
+  }
+  async isAdmin(): Promise<boolean> {
+    const user = await firstValueFrom(this.user$);
+    if (!user) {
+      return false;
+    }
+    const userDoc = await getDoc(doc(this.firestore, 'users', user.uid));
+    return userDoc.exists() && userDoc.data()['role'] === 'admin';
   }
 }
