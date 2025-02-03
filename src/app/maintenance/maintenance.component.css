@@ -1,4 +1,13 @@
 /* maintenance.component.css */
+.content-wrapper {
+  min-height: 100vh;
+  position: relative;
+  transition: margin-left 0.3s ease;
+  background: #f8f9fa;
+}
+.content-wrapper-collapsed .maintenance-container {
+  margin-left: 70px;
+}
 .maintenance-container {
   min-height: 100vh;
   margin-left: 250px;

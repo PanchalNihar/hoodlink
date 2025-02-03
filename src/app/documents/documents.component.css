@@ -5,7 +5,15 @@
     background: #f8f9fa;
     transition: margin-left 0.3s ease;
   }
-  
+  .content-wrapper {
+    min-height: 100vh;
+    position: relative;
+    transition: margin-left 0.3s ease;
+    background: #f8f9fa;
+  }
+  .content-wrapper-collapsed .documents-container {
+    margin-left: 70px;
+  }
   .main-content {
     padding: 2rem;
   }

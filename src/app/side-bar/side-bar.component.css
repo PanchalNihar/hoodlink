@@ -111,6 +111,9 @@
   min-width: 25px;
   text-align: center;
 }
+.cursor{
+  cursor: pointer;
+}
 /* Responsive Styles */
 @media screen and (max-width: 768px) {
   .sidebar {

@@ -1,4 +1,13 @@
 /* notifications.component.css */
+.content-wrapper {
+  min-height: 100vh;
+  position: relative;
+  transition: margin-left 0.3s ease;
+  background: #f8f9fa;
+}
+.content-wrapper-collapsed .notifications-container {
+  margin-left: 70px;
+}
 .notifications-container {
     min-height: 100vh;
     margin-left: 250px;
