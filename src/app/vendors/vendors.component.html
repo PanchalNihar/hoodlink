@@ -1,6 +1,136 @@
-<div
-  class="content-wrapper"
-  [class.content-wrapper-collapsed]="sidebar.isCollapsed"
->
+<div class="content-wrapper" [class.content-wrapper-collapsed]="sidebar.isCollapsed">
   <app-side-bar #sidebar></app-side-bar>
+
+  <div class="vendors-container">
+    <div class="main-content">
+      <!-- Header Section -->
+      <div class="header">
+        <div class="welcome-section">
+          <h1>Vendors Management</h1>
+          <p class="subtitle">Manage vendor records efficiently</p>
+        </div>
+        <div class="header-actions" *ngIf="isAdmin">
+          <button class="btn btn-primary" (click)="openVendorForm()">
+            <i class="fas fa-plus"></i> Add Vendor
+          </button>
+        </div>
+      </div>
+
+      <!-- Vendor Form -->
+      <div class="vendor-form-section" *ngIf="showForm">
+        <div class="form-header">
+          <h2>{{ isEditing ? 'Edit Vendor' : 'Add New Vendor' }}</h2>
+          <button class="btn-icon" (click)="cancelEdit()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <form [formGroup]="vendorForm" (ngSubmit)="onSubmit()" class="vendor-form">
+          <div class="form-group">
+            <label for="name">Vendor Name</label>
+            <input 
+              type="text" 
+              id="name" 
+              formControlName="name" 
+              class="form-control"
+              placeholder="Enter vendor name"
+            >
+            <div class="error-message" *ngIf="vendorForm.get('name')?.touched && vendorForm.get('name')?.invalid">
+              Vendor name is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="contact">Contact Number</label>
+            <input 
+              type="tel" 
+              id="contact" 
+              formControlName="contact" 
+              class="form-control"
+              placeholder="Enter 10-digit contact number"
+            >
+            <div class="error-message" *ngIf="vendorForm.get('contact')?.touched && vendorForm.get('contact')?.invalid">
+              Please enter a valid 10-digit contact number
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input 
+              type="email" 
+              id="email" 
+              formControlName="email" 
+              class="form-control"
+              placeholder="Enter email address"
+            >
+            <div class="error-message" *ngIf="vendorForm.get('email')?.touched && vendorForm.get('email')?.invalid">
+              Please enter a valid email address
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="services">Services (comma-separated)</label>
+            <input 
+              type="text" 
+              id="services" 
+              formControlName="services" 
+              class="form-control"
+              placeholder="e.g., Plumbing, Electrical, Maintenance"
+            >
+            <div class="error-message" *ngIf="vendorForm.get('services')?.touched && vendorForm.get('services')?.invalid">
+              At least one service is required
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" (click)="cancelEdit()">
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary" [disabled]="vendorForm.invalid">
+              {{ isEditing ? 'Update' : 'Save' }} Vendor
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Vendors List -->
+      <div class="vendors-section">
+        <h2>Registered Vendors</h2>
+        <div class="vendors-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Contact</th>
+                <th>Email</th>
+                <th>Services</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let vendor of vendors$ | async">
+                <td>{{ vendor.name }}</td>
+                <td>{{ vendor.contact }}</td>
+                <td>{{ vendor.email }}</td>
+                <td>
+                  <span *ngFor="let service of vendor.services" class="service-tag">
+                    {{ service }}
+                  </span>
+                </td>
+                <td>
+                  <div class="table-actions" *ngIf="isAdmin">
+                    <button class="btn-icon" (click)="editVendor(vendor)">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn-icon" (click)="deleteVendor(vendor.id!)">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
