@@ -5,6 +5,7 @@ import { DashboardComponent } from "../dashboard/dashboard.component";
 import { Router } from '@angular/router';
 import { SideBarComponent } from '../side-bar/side-bar.component';
 import { AuthService } from '../services/auth.service';
+import { user } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-manage-users',
@@ -17,10 +18,13 @@ export class ManageUsersComponent implements OnInit {
   isLoading: boolean = true;
   error: string | null = null;
   isAdminUser:boolean=false
-  constructor(private userService: UserService,private router:Router,private authService:AuthService) {}
+  constructor(private userService: UserService,private router:Router,private authService:AuthService) {
+  
+  }
   ngOnInit(): void {
     this.checkAdminRole()
     this.loadUsers();
+    console.log("users",this.users)
   }
   async checkAdminRole() {
     this.isAdminUser = await this.authService.isAdmin();
