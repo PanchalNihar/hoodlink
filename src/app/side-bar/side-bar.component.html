@@ -1,10 +1,11 @@
 <!-- sidebar.component.html -->
 <div class="sidebar" [class.sidebar-collapsed]="isCollapsed">
   <div class="sidebar-header">
-    <!-- <img src="/assets/logo.png" alt="Logo" class="logo" /> -->
+    <!-- <img src="/logo.png" alt="Logo" class="logo" /> -->
     <button class="toggle-btn" (click)="toggleSidebar()">
       <i class="fas fa-bars"></i>
     </button>
+    <p class="link-text m-lg-1" [class.hide-text]="isCollapsed">HoodLink</p>
   </div>
   
   <nav class="nav-menu cursor">
@@ -45,7 +46,7 @@
       </li>
       <li class="nav-item" routerLinkActive="active">
         <a (click)="goToVendors()" class="nav-link">
-          <i class="fas fa-phone"></i>
+          <i class="fas fa-phone-alt"></i>
           <span class="link-text" [class.hide-text]="isCollapsed">Vendors List</span>
         </a>
       </li>
