@@ -10,6 +10,7 @@ import { MaintenanceComponent } from './maintenance/maintenance.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { ComplaintComponent } from './complaint/complaint.component';
 import { DocumentsComponent } from './documents/documents.component';
+import { VendorsComponent } from './vendors/vendors.component';
 
 export const routes: Routes = [
   {
@@ -62,6 +63,11 @@ export const routes: Routes = [
   {
     path: 'documents',
     component: DocumentsComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'vendors',
+    component: VendorsComponent,
     canActivate: [authGuard],
   },
   {

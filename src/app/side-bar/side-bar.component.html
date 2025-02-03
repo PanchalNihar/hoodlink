@@ -43,6 +43,12 @@
           <span class="link-text" [class.hide-text]="isCollapsed">Notifications</span>
         </a>
       </li>
+      <li class="nav-item" routerLinkActive="active">
+        <a (click)="goToVendors()" class="nav-link">
+          <i class="fas fa-phone"></i>
+          <span class="link-text" [class.hide-text]="isCollapsed">Vendors List</span>
+        </a>
+      </li>
     </ul>
   </nav>
   <div class="logout-container">

@@ -31,6 +31,9 @@ export class SideBarComponent {
   goToComplaint(){
     this.router.navigate(['/complaint']);
   }
+  goToVendors(){
+    this.router.navigate(['/vendors']);
+  }
   async logout(){
     await this.authService.signOut()
     this.router.navigate(['/auth/login']);

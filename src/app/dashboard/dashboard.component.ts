@@ -3,14 +3,14 @@ import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
 import { doc, Firestore, getDoc } from '@angular/fire/firestore';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { SideBarComponent } from "../side-bar/side-bar.component";
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, SideBarComponent],
+  imports: [CommonModule, SideBarComponent,DatePipe],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
@@ -89,5 +89,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
   goToNotification(){
     this.router.navigate(['/notifications'])
+  }
+  goToComplaint(){
+    this.router.navigate(['/complaint'])
   }
 }

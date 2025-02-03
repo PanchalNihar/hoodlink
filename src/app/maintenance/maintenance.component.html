@@ -1,6 +1,9 @@
-<div class="content-wrapper" [class.content-wrapper-collapsed]="sidebar.isCollapsed">
+<div
+  class="content-wrapper"
+  [class.content-wrapper-collapsed]="sidebar.isCollapsed"
+>
   <app-side-bar #sidebar></app-side-bar>
-  
+
   <div class="maintenance-container">
     <div class="main-content">
       <!-- Header Section -->
@@ -10,11 +13,63 @@
           <p class="subtitle">Track and manage maintenance requests</p>
         </div>
         <div class="header-actions">
-          <button class="btn btn-primary">
+          <button class="btn btn-primary" (click)="showNewRequestForm = true">
             <i class="fas fa-plus"></i>
             New Request
           </button>
         </div>
+      </div>
+
+      <!-- New Request Form -->
+      <div class="new-request-form" *ngIf="showNewRequestForm">
+        <h2>New Maintenance Request</h2>
+        <form (ngSubmit)="createRequest()">
+          <div class="form-group">
+            <label>Description</label>
+            <input
+              type="text"
+              [(ngModel)]="newRequest.description"
+              name="description"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label>Amount</label>
+            <input
+              type="number"
+              [(ngModel)]="newRequest.amount"
+              name="amount"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label>Due Date</label>
+            <input
+              type="date"
+              [(ngModel)]="newRequest.dueDate"
+              name="dueDate"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label>Priority</label>
+            <select [(ngModel)]="newRequest.priority" name="priority">
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="showNewRequestForm = false"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
       </div>
 
       <!-- Maintenance Content -->
@@ -27,7 +82,7 @@
             </div>
             <div class="stats-info">
               <h3>Pending</h3>
-              <p class="stats-number">5</p>
+              <p class="stats-number">{{ stats.pending }}</p>
             </div>
           </div>
 
@@ -37,7 +92,7 @@
             </div>
             <div class="stats-info">
               <h3>In Progress</h3>
-              <p class="stats-number">3</p>
+              <p class="stats-number">{{ stats.inProgress }}</p>
             </div>
           </div>
 
@@ -47,7 +102,7 @@
             </div>
             <div class="stats-info">
               <h3>Completed</h3>
-              <p class="stats-number">12</p>
+              <p class="stats-number">{{ stats.completed }}</p>
             </div>
           </div>
         </div>
@@ -55,34 +110,39 @@
         <!-- Active Requests -->
         <div class="requests-section">
           <h2>Active Requests</h2>
-          
-          <div class="request-card">
-            <div class="request-status pending">Pending</div>
-            <div class="request-info">
-              <h3>Plumbing Issue</h3>
-              <p>Leaking faucet in kitchen sink</p>
-              <div class="request-meta">
-                <span><i class="fas fa-calendar"></i> Reported: Jan 28, 2025</span>
-                <span><i class="fas fa-map-marker-alt"></i> Unit 301</span>
-              </div>
-            </div>
-            <div class="request-priority high">
-              High Priority
-            </div>
-          </div>
 
-          <div class="request-card">
-            <div class="request-status progress">In Progress</div>
+          <div class="request-card" *ngFor="let request of activeRequest">
+            <div class="request-status" [class]="request.status">
+              {{ request.status | titlecase }}
+            </div>
             <div class="request-info">
-              <h3>Electrical Repair</h3>
-              <p>Power outlet not working in living room</p>
+              <h3>{{ request.description }}</h3>
+              <p>Amount: Rs {{ request.amount }}</p>
               <div class="request-meta">
-                <span><i class="fas fa-calendar"></i> Reported: Jan 25, 2025</span>
-                <span><i class="fas fa-map-marker-alt"></i> Unit 205</span>
+                <span
+                  ><i class="fas fa-calendar"></i> Reported:
+                  {{ request.reportedDate | date }}</span
+                >
               </div>
             </div>
-            <div class="request-priority medium">
-              Medium Priority
+            <div class="request-priority" [class]="request.priority">
+              {{ request.priority | titlecase }} Priority
+            </div>
+            <div class="request-actions" *ngIf="isAdmin">
+              <button
+                *ngIf="request.status === 'pending'"
+                class="btn btn-primary"
+                (click)="updateStatus(request.id!, 'in_progress')"
+              >
+                Start Work
+              </button>
+              <button
+                *ngIf="request.status === 'in_progress'"
+                class="btn btn-success"
+                (click)="updateStatus(request.id!, 'completed')"
+              >
+                Mark Complete
+              </button>
             </div>
           </div>
         </div>
