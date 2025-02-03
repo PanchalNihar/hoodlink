@@ -1,6 +1,6 @@
 [build]
   command = "npm run build"
-  publish = "dist/hoodlink"
+  publish = "dist/hoodlink/browser"
 
 [build.environment]
   NODE_VERSION = "18.20.0"
