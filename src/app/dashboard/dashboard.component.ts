@@ -178,4 +178,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   goToDocument() {
     this.router.navigate(['/documents']);
   }
+  goToProfile(){
+    this.router.navigate(['/profile']);
+  }
 }

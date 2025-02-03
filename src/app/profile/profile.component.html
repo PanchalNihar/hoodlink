@@ -1,0 +1,68 @@
+<div class="content-wrapper" [class.content-wrapper-collapsed]="sidebar.isCollapsed">
+  <app-side-bar #sidebar></app-side-bar>
+
+  <div class="profile-container">
+    <div class="main-content" *ngIf="!isLoading; else loadingTemplate">
+      <!-- Header Section -->
+      <div class="header">
+        <div class="welcome-section">
+          <h1>Profile</h1>
+          <p class="subtitle">View and manage your profile details</p>
+        </div>
+      </div>
+
+      <!-- Profile Card -->
+      <div class="profile-card">
+        <div *ngIf="!isEditing; else editProfileForm">
+          <h2>{{ userProfile.username || "N/A" }}</h2>
+          <p>Email: {{ userProfile.email || "N/A" }}</p>
+          <p>
+            Role:
+            <span class="role-badge" [ngClass]="userProfile.role">{{ userProfile.role || "N/A" }}</span>
+          </p>
+          <p>Joined: {{ userProfile.createdAt | date : "mediumDate" }}</p>
+        </div>
+
+        <!-- Edit Form -->
+        <ng-template #editProfileForm>
+          <div class="edit-profile-form">
+            <input [(ngModel)]="userProfile.username" placeholder="Username" />
+            <input [(ngModel)]="userProfile.email" placeholder="Email" />
+            <input [(ngModel)]="userProfile.phone" placeholder="Phone" />
+            <input [(ngModel)]="userProfile.address" placeholder="Address" />
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- Additional Information -->
+      <div class="profile-info">
+        <h3>Additional Information</h3>
+        <table class="profile-table">
+          <tr>
+            <th>Phone</th>
+            <td>{{ userProfile.phone || "Not provided" }}</td>
+          </tr>
+          <tr>
+            <th>Address</th>
+            <td>{{ userProfile.address || "Not provided" }}</td>
+          </tr>
+          <tr>
+            <th>Account Status</th>
+            <td><span class="status-badge active">Active</span></td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Actions -->
+      <div class="actions">
+        <button class="btn btn-primary" (click)="isEditing ? saveProfile() : toggleEditMode()">
+          <i class="fas fa-edit"></i> {{ isEditing ? "Save Profile" : "Edit Profile" }}
+        </button>
+      </div>
+    </div>
+
+    <ng-template #loadingTemplate>
+      <div class="loading">Loading profile...</div>
+    </ng-template>
+  </div>
+</div>

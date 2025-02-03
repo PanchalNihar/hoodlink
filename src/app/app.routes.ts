@@ -11,6 +11,7 @@ import { NotificationsComponent } from './notifications/notifications.component'
 import { ComplaintComponent } from './complaint/complaint.component';
 import { DocumentsComponent } from './documents/documents.component';
 import { VendorsComponent } from './vendors/vendors.component';
+import { ProfileComponent } from './profile/profile.component';
 
 export const routes: Routes = [
   {
@@ -69,6 +70,11 @@ export const routes: Routes = [
     path: 'vendors',
     component: VendorsComponent,
     canActivate: [authGuard],
+  },
+  {
+    path:'profile',
+    component:ProfileComponent,
+    canActivate:[authGuard]
   },
   {
     path: '**',

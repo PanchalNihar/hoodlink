@@ -55,6 +55,7 @@
               <p class="stats-number">{{ dashBoardStats.activeComplaints }}</p>
             </div>
           </div>
+          
 
           <!-- Main Actions -->
           <div class="actions-card">
@@ -71,6 +72,10 @@
               <button class="btn btn-info" (click)="goToNotification()">
                 <i class="fas fa-bell"></i>
                 Notifications
+              </button>
+              <button class="btn btn-success" (click)="goToProfile()">
+                <i class="fas fa-user"></i>
+                My Profile
               </button>
             </div>
           </div>
@@ -125,7 +130,7 @@
                 <i class="fas fa-podcast"></i>
                 View Notifications
               </button>
-              <button class="btn btn-primary">
+              <button class="btn btn-primary" (click)="goToProfile()">
                 <i class="fas fa-user"></i>
                 My Profile
               </button>
