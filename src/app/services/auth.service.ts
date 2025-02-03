@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
-import {
-  signInWithEmailAndPassword as firebaseSignIn,
-  createUserWithEmailAndPassword as firebaseCreateUser,
-} from '@angular/fire/auth';
+import { signInWithEmailAndPassword as firebaseSignIn, createUserWithEmailAndPassword as firebaseCreateUser } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
@@ -14,14 +11,9 @@ import { BehaviorSubject, firstValueFrom } from 'rxjs';
 export class AuthService {
   private userState = new BehaviorSubject<User | null>(null);
   user$ = this.userState.asObservable();
-  isAuthLoaded = false; // Flag to track if auth has been initialized
+  isAuthLoaded = false; 
 
-  constructor(
-    private auth: Auth,
-    private firestore: Firestore,
-    private router: Router
-  ) {
-    // Wait for Firebase to fully load authentication before navigating
+  constructor(private auth: Auth, private firestore: Firestore, private router: Router) {
     onAuthStateChanged(this.auth, async (user) => {
       this.userState.next(user);
       this.isAuthLoaded = true;
@@ -29,13 +21,16 @@ export class AuthService {
       if (user) {
         const userDocRef = doc(this.firestore, 'users', user.uid);
         const userDoc = await getDoc(userDocRef);
-
         if (userDoc.exists()) {
           const userData = userDoc.data();
-          if (userData['role'] === 'admin') {
-            this.router.navigate(['/admin']);
-          } else {
-            this.router.navigate(['/dashboard']);
+          
+          // Only redirect if user is on the login page (to prevent forcing them to dashboard on refresh)
+          if (this.router.url === '/auth/login') {
+            if (userData['role'] === 'admin') {
+              this.router.navigate(['/admin']);
+            } else {
+              this.router.navigate(['/dashboard']);
+            }
           }
         }
       }
@@ -48,9 +43,6 @@ export class AuthService {
       const user = userCredential.user;
       if (!user) throw new Error('No user found after login');
 
-      console.log('User logged in:', user.uid);
-
-      // Get the user role from Firestore
       const userDocRef = doc(this.firestore, 'users', user.uid);
       const userDoc = await getDoc(userDocRef);
       if (!userDoc.exists()) {
@@ -58,11 +50,11 @@ export class AuthService {
         throw new Error('User document not found in Firestore');
       }
 
-      // Wait for Firebase auth state to fully load before navigating
       this.isAuthLoaded = true;
       const userData = userDoc.data();
       this.userState.next(user);
 
+      // Redirect user based on role **after login only**
       if (userData['role'] === 'admin') {
         await this.router.navigate(['/admin']);
       } else {
@@ -83,7 +75,7 @@ export class AuthService {
       const userDocRef = doc(this.firestore, 'users', user.uid);
       await setDoc(userDocRef, {
         uid: user.uid,
-        email: user.email,
+        email: email,
         role: role,
         username: username,
         createdAt: new Date().toISOString(),
@@ -92,6 +84,7 @@ export class AuthService {
       this.userState.next(user);
       this.isAuthLoaded = true;
 
+      // Redirect **only on registration**
       if (role === 'admin') {
         await this.router.navigate(['/admin']);
       } else {

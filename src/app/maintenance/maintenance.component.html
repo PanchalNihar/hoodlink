@@ -9,13 +9,20 @@
       <!-- Header Section -->
       <div class="header">
         <div class="welcome-section">
-          <h1>Maintenance Requests</h1>
-          <p class="subtitle">Track and manage maintenance requests</p>
+          <h1>{{ currentViewTitle || 'Maintenance Requests' }}</h1>
+          <p class="subtitle">{{ currentViewSubtitle || 'Track and manage maintenance requests' }}</p>
         </div>
         <div class="header-actions">
           <button class="btn btn-primary" (click)="showNewRequestForm = true">
             <i class="fas fa-plus"></i>
             New Request
+          </button>
+          <button 
+            *ngIf="currentFilter" 
+            class="btn btn-secondary ml-2" 
+            (click)="clearFilter()"
+          >
+            Clear Filter
           </button>
         </div>
       </div>
@@ -76,7 +83,11 @@
       <div class="maintenance-content">
         <!-- Stats Cards -->
         <div class="stats-grid">
-          <div class="stats-card">
+          <div 
+            class="stats-card" 
+            (click)="filterRequestsByStatus('pending')"
+            style="cursor: pointer;"
+          >
             <div class="stats-icon pending">
               <i class="fas fa-clock"></i>
             </div>
@@ -85,8 +96,12 @@
               <p class="stats-number">{{ stats.pending }}</p>
             </div>
           </div>
-
-          <div class="stats-card">
+  
+          <div 
+            class="stats-card" 
+            (click)="filterRequestsByStatus('in_progress')"
+            style="cursor: pointer;"
+          >
             <div class="stats-icon progress">
               <i class="fas fa-tools"></i>
             </div>
@@ -95,8 +110,12 @@
               <p class="stats-number">{{ stats.inProgress }}</p>
             </div>
           </div>
-
-          <div class="stats-card">
+  
+          <div 
+            class="stats-card" 
+            (click)="filterRequestsByStatus('completed')"
+            style="cursor: pointer;"
+          >
             <div class="stats-icon completed">
               <i class="fas fa-check-circle"></i>
             </div>
@@ -109,9 +128,11 @@
 
         <!-- Active Requests -->
         <div class="requests-section">
-          <h2>Active Requests</h2>
+          <h2>
+            {{ currentFilter ? (currentFilter | titlecase) + ' Requests' : 'Active Requests' }}
+          </h2>
 
-          <div class="request-card" *ngFor="let request of activeRequest">
+          <div class="request-card" *ngFor="let request of filteredRequests.length ? filteredRequests : activeRequest">
             <div class="request-status" [class]="request.status">
               {{ request.status | titlecase }}
             </div>

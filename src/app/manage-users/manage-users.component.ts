@@ -1,11 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { UserService, User } from '../services/user.service';
-import { DashboardComponent } from "../dashboard/dashboard.component";
 import { Router } from '@angular/router';
 import { SideBarComponent } from '../side-bar/side-bar.component';
 import { AuthService } from '../services/auth.service';
-import { user } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-manage-users',

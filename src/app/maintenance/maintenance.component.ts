@@ -9,6 +9,7 @@ import { firstValueFrom } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
+
 @Component({
   selector: 'app-maintenance',
   imports: [SideBarComponent, FormsModule, CommonModule],
@@ -22,8 +23,12 @@ export class MaintenanceComponent implements OnInit, OnDestroy {
     completed: 0,
   };
   activeRequest: Maintenance[] = [];
+  filteredRequests: Maintenance[] = [];
   isAdmin = false;
   showNewRequestForm = false;
+  currentFilter: Maintenance['status'] | null = null;
+  currentViewTitle = '';
+  currentViewSubtitle = '';
   private subscriptions: Subscription[] = [];
   newRequest = {
     description: '',
@@ -32,10 +37,12 @@ export class MaintenanceComponent implements OnInit, OnDestroy {
     priority: 'medium' as const,
     unit: '',
   };
+
   constructor(
     private maintenanceService: MaintenanceService,
     private authService: AuthService
   ) {}
+
   async ngOnInit() {
     try {
       this.isAdmin = await this.authService.isAdmin();
@@ -57,9 +64,39 @@ export class MaintenanceComponent implements OnInit, OnDestroy {
       console.error('Error initializing maintenance component:', error);
     }
   }
+
   ngOnDestroy() {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
+
+  filterRequestsByStatus(status: Maintenance['status']) {
+    this.currentFilter = status;
+    this.filteredRequests = this.activeRequest.filter(request => request.status === status);
+    
+    // Update view title and subtitle based on filter
+    switch(status) {
+      case 'pending':
+        this.currentViewTitle = 'Pending Maintenance Requests';
+        this.currentViewSubtitle = 'Requests awaiting action';
+        break;
+      case 'in_progress':
+        this.currentViewTitle = 'In Progress Maintenance Requests';
+        this.currentViewSubtitle = 'Requests currently being worked on';
+        break;
+      case 'completed':
+        this.currentViewTitle = 'Completed Maintenance Requests';
+        this.currentViewSubtitle = 'Requests that have been resolved';
+        break;
+    }
+  }
+
+  clearFilter() {
+    this.currentFilter = null;
+    this.filteredRequests = [];
+    this.currentViewTitle = '';
+    this.currentViewSubtitle = '';
+  }
+
   async createRequest() {
     try {
       await this.maintenanceService.createMaintenanceRequest(this.newRequest);
@@ -76,6 +113,7 @@ export class MaintenanceComponent implements OnInit, OnDestroy {
       // Handle error appropriately (show user feedback)
     }
   }
+
   async updateStatus(requestId: string, status: Maintenance['status']) {
     try {
       await this.maintenanceService.updateRequestStatus(requestId, status);

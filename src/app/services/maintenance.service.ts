@@ -58,7 +58,7 @@ export class MaintenanceService {
         case 'pending':
           stats.pending++;
           break;
-        case 'in_progess':
+        case 'in_progress':
           stats.inProgress++;
           break;
         case 'completed':
@@ -73,7 +73,7 @@ export class MaintenanceService {
   }
    getActicveRequest(): Observable<Maintenance[]> {
     const maintenanceRef = collection(this.firestore, 'maintenance');
-    const q = query(maintenanceRef, where('status', 'in', ['pending', 'in_progress']));
+    const q = query(maintenanceRef, where('status', 'in', ['pending', 'in_progress','completed']));
     return collectionData(q, { idField: 'id' }) as Observable<Maintenance[]>;
   }
   async createMaintenanceRequest(request: Omit<Maintenance, 'id' | 'status' | 'reportedDate' | 'userId'>) {
