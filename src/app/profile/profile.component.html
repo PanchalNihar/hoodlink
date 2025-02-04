@@ -18,7 +18,7 @@
           <p>Email: {{ userProfile.email || "N/A" }}</p>
           <p>
             Role:
-            <span class="role-badge" [ngClass]="userProfile.role">{{ userProfile.role || "N/A" }}</span>
+            <span  [ngClass]="userProfile.role">{{ userProfile.role || "N/A" }}</span>
           </p>
           <p>Joined: {{ userProfile.createdAt | date : "mediumDate" }}</p>
         </div>

@@ -1,3 +1,4 @@
+import { APP_BASE_HREF } from '@angular/common';
 import {
   AngularNodeAppEngine,
   createNodeRequestHandler,
@@ -33,16 +34,21 @@ app.use(
   express.static(browserDistFolder, {
     maxAge: '1y',
     index: false,
-    redirect: false,
+    // redirect: false,
   }),
 );
 
 /**
  * Handle all other requests by rendering the Angular application.
  */
-app.use('/**', (req, res, next) => {
+app.get('*', (req, res, next) => {
+  const { protocol, originalUrl, baseUrl, headers } = req;
+  
   angularApp
-    .handle(req)
+    .handle(req, {
+      url: `${protocol}://${headers.host}${originalUrl}`,
+      providers: [{ provide: APP_BASE_HREF, useValue: baseUrl }],
+    })
     .then((response) =>
       response ? writeResponseToNodeResponse(response, res) : next(),
     )
