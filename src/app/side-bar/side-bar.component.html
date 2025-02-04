@@ -1,11 +1,12 @@
-<!-- sidebar.component.html -->
-<div class="sidebar" [class.sidebar-collapsed]="isCollapsed">
+<!-- Overlay for mobile -->
+<div class="sidebar-overlay" [class.show]="isOpen" (click)="closeSidebar()"></div>
+
+<div class="sidebar" [class.sidebar-collapsed]="isCollapsed && !isMobile" [class.sidebar-open]="isOpen">
   <div class="sidebar-header">
-    <!-- <img src="/logo.png" alt="Logo" class="logo" /> -->
     <button class="toggle-btn" (click)="toggleSidebar()">
       <i class="fas fa-bars"></i>
     </button>
-    <p class="link-text m-lg-1" [class.hide-text]="isCollapsed">HoodLink</p>
+    <p class="link-text m-lg-1" [class.hide-text]="isCollapsed && !isMobile">HoodLink</p>
   </div>
   
   <nav class="nav-menu cursor">
@@ -13,49 +14,51 @@
       <li class="nav-item" routerLinkActive="active">
         <a (click)="goToDashboard()" class="nav-link">
           <i class="fas fa-home"></i>
-          <span class="link-text" [class.hide-text]="isCollapsed">Dashboard</span>
+          <span class="link-text" [class.hide-text]="isCollapsed && !isMobile">Dashboard</span>
         </a>
       </li>
       
       <li class="nav-item" routerLinkActive="active">
         <a (click)="goToComplaint()" class="nav-link">
           <i class="fas fa-exclamation-circle"></i>
-          <span class="link-text" [class.hide-text]="isCollapsed">Complaints</span>
+          <span class="link-text" [class.hide-text]="isCollapsed && !isMobile">Complaints</span>
         </a>
       </li>
       
       <li class="nav-item" routerLinkActive="active">
         <a (click)="goToDocuments()" class="nav-link">
           <i class="fas fa-file-alt"></i>
-          <span class="link-text" [class.hide-text]="isCollapsed">Documents</span>
+          <span class="link-text" [class.hide-text]="isCollapsed && !isMobile">Documents</span>
         </a>
       </li>
       
       <li class="nav-item" routerLinkActive="active">
         <a (click)="goToMaintenance()" class="nav-link">
           <i class="fas fa-tools"></i>
-          <span class="link-text" [class.hide-text]="isCollapsed">Maintenance</span>
+          <span class="link-text" [class.hide-text]="isCollapsed && !isMobile">Maintenance</span>
         </a>
       </li>
       
       <li class="nav-item" routerLinkActive="active">
         <a (click)="goToNotification()" class="nav-link">
           <i class="fas fa-bell"></i>
-          <span class="link-text" [class.hide-text]="isCollapsed">Notifications</span>
+          <span class="link-text" [class.hide-text]="isCollapsed && !isMobile">Notifications</span>
         </a>
       </li>
+      
       <li class="nav-item" routerLinkActive="active">
         <a (click)="goToVendors()" class="nav-link">
           <i class="fas fa-phone-alt"></i>
-          <span class="link-text" [class.hide-text]="isCollapsed">Vendors List</span>
+          <span class="link-text" [class.hide-text]="isCollapsed && !isMobile">Vendors List</span>
         </a>
       </li>
     </ul>
   </nav>
+  
   <div class="logout-container">
     <button class="logout-btn" (click)="logout()">
       <i class="fas fa-sign-out-alt"></i>
-      <span class="link-text" [class.hide-text]="isCollapsed">Logout</span>
+      <span class="link-text" [class.hide-text]="isCollapsed && !isMobile">Logout</span>
     </button>
   </div>
 </div>

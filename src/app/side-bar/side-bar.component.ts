@@ -1,4 +1,4 @@
-import { Component} from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -12,30 +12,67 @@ import { AuthService } from '../services/auth.service';
 })
 export class SideBarComponent {
   isCollapsed = false;
-  constructor(private router:Router,private authService:AuthService){}
+  isOpen = false;
+  isMobile = window.innerWidth <= 768;
+
+  constructor(private router: Router, private authService: AuthService) {
+    this.checkScreenSize();
+  }
+
+  @HostListener('window:resize')
+  checkScreenSize() {
+    this.isMobile = window.innerWidth <= 768;
+    if (!this.isMobile) {
+      this.isOpen = false;
+    }
+  }
+
   toggleSidebar() {
-    this.isCollapsed = !this.isCollapsed;
+    if (this.isMobile) {
+      this.isOpen = !this.isOpen;
+    } else {
+      this.isCollapsed = !this.isCollapsed;
+    }
   }
-  goToDashboard(){
-    this.router.navigate(['/dashboard']);
+
+  closeSidebar() {
+    if (this.isMobile) {
+      this.isOpen = false;
+    }
   }
-  goToMaintenance(){
-    this.router.navigate(['/maintenance']);
+
+  // Navigation methods with automatic sidebar closing on mobile
+  private navigateAndClose(path: string) {
+    this.router.navigate([path]);
+    this.closeSidebar();
   }
-  goToNotification(){
-    this.router.navigate(['/notifications']);
+
+  goToDashboard() {
+    this.navigateAndClose('/dashboard');
   }
-  goToDocuments(){
-    this.router.navigate(['/documents']);
+
+  goToMaintenance() {
+    this.navigateAndClose('/maintenance');
   }
-  goToComplaint(){
-    this.router.navigate(['/complaint']);
+
+  goToNotification() {
+    this.navigateAndClose('/notifications');
   }
-  goToVendors(){
-    this.router.navigate(['/vendors']);
+
+  goToDocuments() {
+    this.navigateAndClose('/documents');
   }
-  async logout(){
-    await this.authService.signOut()
-    this.router.navigate(['/auth/login']);
+
+  goToComplaint() {
+    this.navigateAndClose('/complaint');
+  }
+
+  goToVendors() {
+    this.navigateAndClose('/vendors');
+  }
+
+  async logout() {
+    await this.authService.signOut();
+    this.navigateAndClose('/auth/login');
   }
 }
