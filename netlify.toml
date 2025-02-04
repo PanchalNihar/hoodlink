@@ -1,6 +1,9 @@
 [build]
   command = "npm run build"
   publish = "dist/hoodlink/browser"
+  timeout = "30m"
 
-[build.environment]
-  NODE_VERSION = "18.20.0"
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
