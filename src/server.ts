@@ -1,4 +1,4 @@
-import { APP_BASE_HREF } from '@angular/common';
+import { AngularAppEngine } from '@angular/ssr';
 import {
   AngularNodeAppEngine,
   createNodeRequestHandler,
@@ -8,7 +8,15 @@ import {
 import express from 'express';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { getContext } from '@netlify/angular-runtime/context';
+const angularAppEngine = new AngularAppEngine();
 
+export async function netlifyAppEngineHandler(request: Request): Promise<Response> {
+  const context = getContext();
+  
+  const result = await angularAppEngine.handle(request, context);
+  return result || new Response('Not found', { status: 404 });
+}
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
 
@@ -41,14 +49,9 @@ app.use(
 /**
  * Handle all other requests by rendering the Angular application.
  */
-app.get('*', (req, res, next) => {
-  const { protocol, originalUrl, baseUrl, headers } = req;
-  
+app.use('*', (req, res, next) => {
   angularApp
-    .handle(req, {
-      url: `${protocol}://${headers.host}${originalUrl}`,
-      providers: [{ provide: APP_BASE_HREF, useValue: baseUrl }],
-    })
+    .handle(req)
     .then((response) =>
       response ? writeResponseToNodeResponse(response, res) : next(),
     )
