@@ -1,4 +1,3 @@
-import { AngularAppEngine } from '@angular/ssr';
 import {
   AngularNodeAppEngine,
   createNodeRequestHandler,
@@ -8,15 +7,7 @@ import {
 import express from 'express';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { getContext } from '@netlify/angular-runtime/context';
-const angularAppEngine = new AngularAppEngine();
 
-export async function netlifyAppEngineHandler(request: Request): Promise<Response> {
-  const context = getContext();
-  
-  const result = await angularAppEngine.handle(request, context);
-  return result || new Response('Not found', { status: 404 });
-}
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
 
@@ -42,14 +33,14 @@ app.use(
   express.static(browserDistFolder, {
     maxAge: '1y',
     index: false,
-    // redirect: false,
+    redirect: false,
   }),
 );
 
 /**
  * Handle all other requests by rendering the Angular application.
  */
-app.use('*', (req, res, next) => {
+app.use('/**', (req, res, next) => {
   angularApp
     .handle(req)
     .then((response) =>
