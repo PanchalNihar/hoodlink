@@ -137,8 +137,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     try {
       const userDocsRef = doc(this.firestore, 'users', user.uid);
       const userDoc = await getDoc(userDocsRef);
-      console.log('user doc:', userDoc);
-      console.log('user doc ref:', userDocsRef);
+      //console.log('user doc:', userDoc);
+      //console.log('user doc ref:', userDocsRef);
       if (userDoc.exists()) {
         const userData = userDoc.data();
         this.userRole = userData['role'] || '';

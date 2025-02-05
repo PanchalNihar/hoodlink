@@ -1,0 +1,62 @@
+.notification-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.notification-popup {
+  background: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.notification-popup-header {
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notification-popup-content {
+  padding: 1.5rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.notification-popup-actions {
+  padding: 1rem;
+  border-top: 1px solid #eee;
+  text-align: right;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.notification-icon {
+  font-size: 1.5rem;
+}
+
+.notification-icon.info {
+  color: #0d6efd;
+}
+.notification-icon.alert {
+  color: #dc3545;
+}
+.notification-icon.success {
+  color: #198754;
+}

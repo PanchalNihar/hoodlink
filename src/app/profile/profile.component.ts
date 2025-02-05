@@ -5,6 +5,7 @@ import { SideBarComponent } from '../side-bar/side-bar.component';
 import { AuthService } from '../services/auth.service';
 import { Firestore, doc, setDoc, getDoc } from '@angular/fire/firestore';
 import { User } from '@angular/fire/auth';
+import { Router } from '@angular/router';
 
 interface UserProfile {
   username?: string;
@@ -30,7 +31,8 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private authService: AuthService, 
-    private firestore: Firestore
+    private firestore: Firestore,
+    private router:Router
   ) {}
 
   ngOnInit() {
@@ -72,5 +74,8 @@ export class ProfileComponent implements OnInit {
     } catch (error) {
       console.error('Error saving profile:', error);
     }
+  }
+  goToDashboard(){
+    this.router.navigate(['/dashboard']);
   }
 }

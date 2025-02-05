@@ -1,6 +1,9 @@
-<div class="content-wrapper" [class.content-wrapper-collapsed]="sidebar.isCollapsed">
+<div
+  class="content-wrapper"
+  [class.content-wrapper-collapsed]="sidebar.isCollapsed"
+>
   <app-side-bar #sidebar></app-side-bar>
-  
+
   <div class="notifications-container">
     <div class="main-content">
       <!-- Header Section -->
@@ -15,28 +18,63 @@
             Mark All as Read
           </button>
           <!-- Admin-only create button -->
-          <button *ngIf="isAdmin" class="btn btn-success" (click)="toggleCreateForm()">
+          <button
+            *ngIf="isAdmin"
+            class="btn btn-success"
+            (click)="toggleCreateForm()"
+          >
             <i class="fas fa-plus"></i>
-            {{ showCreateForm ? 'Cancel' : 'Create Notification' }}
+            {{ showCreateForm ? "Cancel" : "Create Notification" }}
           </button>
         </div>
       </div>
 
       <!-- Admin Create Form -->
-      <div class="create-notification-form mb-4" *ngIf="showCreateForm && isAdmin">
-        <form [formGroup]="notificationForm" (ngSubmit)="createNewNotification()" class="bg-white p-4 rounded shadow">
+      <div
+        class="create-notification-form mb-4"
+        *ngIf="showCreateForm && isAdmin"
+      >
+        <form
+          [formGroup]="notificationForm"
+          (ngSubmit)="createNewNotification()"
+          class="bg-white p-4 rounded shadow"
+        >
           <div class="mb-3">
             <label for="title" class="form-label">Title</label>
-            <input type="text" id="title" formControlName="title" class="form-control" placeholder="Notification Title">
-            <div class="text-danger" *ngIf="notificationForm.get('title')?.touched && notificationForm.get('title')?.invalid">
+            <input
+              type="text"
+              id="title"
+              formControlName="title"
+              class="form-control"
+              placeholder="Notification Title"
+            />
+            <div
+              class="text-danger"
+              *ngIf="
+                notificationForm.get('title')?.touched &&
+                notificationForm.get('title')?.invalid
+              "
+            >
               Title is required
             </div>
           </div>
 
           <div class="mb-3">
             <label for="message" class="form-label">Message</label>
-            <textarea id="message" formControlName="message" class="form-control" rows="3" placeholder="Notification Message"></textarea>
-            <div class="text-danger" *ngIf="notificationForm.get('message')?.touched && notificationForm.get('message')?.invalid">
+            <textarea
+              id="message"
+              formControlName="message"
+              class="form-control"
+              rows="3"
+              placeholder="Notification Message"
+            ></textarea>
+            <div
+              class="text-danger"
+              *ngIf="
+                notificationForm.get('message')?.touched &&
+                notificationForm.get('message')?.invalid
+              "
+            >
               Message is required
             </div>
           </div>
@@ -50,7 +88,11 @@
             </select>
           </div>
 
-          <button type="submit" class="btn btn-primary" [disabled]="notificationForm.invalid">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="notificationForm.invalid"
+          >
             Create Notification
           </button>
         </form>
@@ -60,28 +102,43 @@
       <div class="notifications-content">
         <ng-container *ngIf="notifications$ | async as notifications">
           <!-- Unread Notifications -->
-          <div class="notification-section" *ngIf="hasUnreadNotifications(notifications)">
+          <div
+            class="notification-section"
+            *ngIf="hasUnreadNotifications(notifications)"
+          >
             <h2>New Notifications</h2>
-            
-            <div class="notification-card unread" *ngFor="let notification of getUnreadNotifications(notifications)">
+
+            <div
+              class="notification-card unread"
+              *ngFor="let notification of getUnreadNotifications(notifications)"
+            >
               <div class="notification-icon" [ngClass]="notification.type">
-                <i class="fas" [ngClass]="{
-                  'fa-info-circle': notification.type === 'info',
-                  'fa-exclamation-circle': notification.type === 'alert',
-                  'fa-check-circle': notification.type === 'success',
-                  'fa-bell': !notification.type
-                }"></i>
+                <i
+                  class="fas"
+                  [ngClass]="{
+                    'fa-info-circle': notification.type === 'info',
+                    'fa-exclamation-circle': notification.type === 'alert',
+                    'fa-check-circle': notification.type === 'success',
+                    'fa-bell': !notification.type
+                  }"
+                ></i>
               </div>
               <div class="notification-content">
                 <h3>{{ notification.title }}</h3>
                 <p>{{ notification.message }}</p>
-                <span class="notification-time">{{ notification.createdAt | date:'medium' }}</span>
+                <span class="notification-time">{{
+                  notification.createdAt | date : "medium"
+                }}</span>
               </div>
               <div class="notification-actions">
                 <button class="btn-icon" (click)="markAllAsRead()">
                   <i class="fas fa-check"></i>
                 </button>
-                <button class="btn-icon" *ngIf="isAdmin" (click)="deleteNotification(notification.id)">
+                <button
+                  class="btn-icon"
+                  *ngIf="isAdmin"
+                  (click)="deleteNotification(notification.id)"
+                >
                   <i class="fas fa-trash"></i>
                 </button>
               </div>
@@ -89,25 +146,40 @@
           </div>
 
           <!-- Read Notifications -->
-          <div class="notification-section" *ngIf="hasReadNotifications(notifications)">
+          <div
+            class="notification-section"
+            *ngIf="hasReadNotifications(notifications)"
+          >
             <h2>Earlier</h2>
-            
-            <div class="notification-card" *ngFor="let notification of getReadNotifications(notifications)">
+
+            <div
+              class="notification-card"
+              *ngFor="let notification of getReadNotifications(notifications)"
+            >
               <div class="notification-icon" [ngClass]="notification.type">
-                <i class="fas" [ngClass]="{
-                  'fa-info-circle': notification.type === 'info',
-                  'fa-exclamation-circle': notification.type === 'alert',
-                  'fa-check-circle': notification.type === 'success',
-                  'fa-bell': !notification.type
-                }"></i>
+                <i
+                  class="fas"
+                  [ngClass]="{
+                    'fa-info-circle': notification.type === 'info',
+                    'fa-exclamation-circle': notification.type === 'alert',
+                    'fa-check-circle': notification.type === 'success',
+                    'fa-bell': !notification.type
+                  }"
+                ></i>
               </div>
               <div class="notification-content">
                 <h3>{{ notification.title }}</h3>
                 <p>{{ notification.message }}</p>
-                <span class="notification-time">{{ notification.createdAt | date:'medium' }}</span>
+                <span class="notification-time">{{
+                  notification.createdAt | date : "medium"
+                }}</span>
               </div>
               <div class="notification-actions">
-                <button class="btn-icon" *ngIf="isAdmin" (click)="deleteNotification(notification.id)">
+                <button
+                  class="btn-icon"
+                  *ngIf="isAdmin"
+                  (click)="deleteNotification(notification.id)"
+                >
                   <i class="fas fa-trash"></i>
                 </button>
               </div>
@@ -115,6 +187,14 @@
           </div>
         </ng-container>
       </div>
+      <app-notification-popup
+        *ngIf="currentNotification"
+        [notification]="currentNotification"
+        [show]="showPopup"
+        (close)="handleClosePopup()"
+        (markAsRead)="handelMarkAsRead($event)"
+      >
+      </app-notification-popup>
     </div>
   </div>
 </div>

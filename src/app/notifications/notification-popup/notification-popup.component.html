@@ -1,0 +1,30 @@
+<div *ngIf="show" class="notification-popup-overlay">
+  <div class="notification-popup">
+    <div class="notification-popup-header">
+      <h3>New Notification</h3>
+      <button class="close-button" (click)="onClose()">x</button>
+    </div>
+    <div class="notification-popup-content">
+      <div class="notification-icon" [ngClass]="notification.type">
+        <i
+          class="fas"
+          [ngClass]="{
+            'fa-info-circle': notification.type === 'info',
+            'fa-exclamation-circle': notification.type === 'alert',
+            'fa-check-circle': notification.type === 'success',
+            'fa-bell': !notification.type
+          }"
+        ></i>
+      </div>
+      <div class="notification-details">
+        <h4>{{ notification.title }}</h4>
+        <p>{{ notification.message }}</p>
+      </div>
+    </div>
+    <div class="notification-popup-actions">
+      <button class="btn btn-primary" (click)="onMarkAsRead()">
+        Mark as Read
+      </button>
+    </div>
+  </div>
+</div>

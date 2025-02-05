@@ -6,7 +6,7 @@ import {
 } from '../services/notification.service';
 import { AuthService } from '../services/auth.service';
 import { firstValueFrom, Observable } from 'rxjs';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import {
   FormBuilder,
   FormControl,
@@ -15,10 +15,18 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { NotificationPopupComponent } from './notification-popup/notification-popup.component';
 
 @Component({
   selector: 'app-notifications',
-  imports: [SideBarComponent, CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [
+    SideBarComponent,
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    DatePipe,
+    NotificationPopupComponent,
+  ],
   templateUrl: './notifications.component.html',
   styleUrl: './notifications.component.css',
 })
@@ -27,6 +35,8 @@ export class NotificationsComponent implements OnInit {
   isAdmin = false;
   showCreateForm = false;
   notificationForm: FormGroup;
+  currentNotification: Notification | null = null;
+  showPopup = false;
   constructor(
     private notificationService: NotificationService,
     private authService: AuthService,
@@ -52,10 +62,34 @@ export class NotificationsComponent implements OnInit {
     try {
       this.notifications$ = this.notificationService.getNotifications();
       this.isAdmin = await this.authService.isAdmin();
+      if (!this.isAdmin) {
+        this.checkUnreadNotifications();
+      }
     } catch (error) {
       console.error('Error in ngOnInit:', error);
       this.isAdmin = false;
     }
+  }
+  private async checkUnreadNotifications() {
+    const notifications = await firstValueFrom(this.notifications$);
+    const unread = this.getUnreadNotifications(notifications);
+    if (unread.length > 0) {
+      this.currentNotification = unread[0];
+      this.showPopup = true;
+    }
+  }
+  async handelMarkAsRead(notificationId: string) {
+    try {
+      await this.notificationService.markAsRead(notificationId);
+      this.showPopup = false;
+      this.currentNotification = null;
+    } catch (error) {
+      console.error('Error marking as read:', error);
+    }
+  }
+  handleClosePopup() {
+    this.showPopup = false;
+    this.currentNotification = null;
   }
   getUnreadNotifications(notifications: Notification[]): Notification[] {
     return notifications.filter((n) => !n.isRead);
