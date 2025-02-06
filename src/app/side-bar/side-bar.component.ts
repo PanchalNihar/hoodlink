@@ -1,19 +1,24 @@
 import { Component, HostListener } from '@angular/core';
-import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-side-bar',
-  imports: [CommonModule, FormsModule],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule
+  ],
   templateUrl: './side-bar.component.html',
-  styleUrl: './side-bar.component.css',
+  styleUrls: ['./side-bar.component.css']
 })
 export class SideBarComponent {
   isCollapsed = false;
-  isOpen = false;
-  isMobile = window.innerWidth <= 768;
+  isOpen = true;
+  isMobile = false;
 
   constructor(private router: Router, private authService: AuthService) {
     this.checkScreenSize();
@@ -21,9 +26,12 @@ export class SideBarComponent {
 
   @HostListener('window:resize')
   checkScreenSize() {
+    const previousIsMobile = this.isMobile;
     this.isMobile = window.innerWidth <= 768;
-    if (!this.isMobile) {
-      this.isOpen = false;
+    
+    // Keep sidebar visible by default on desktop
+    if (!this.isMobile && previousIsMobile) {
+      this.isOpen = true;
     }
   }
 
@@ -44,7 +52,9 @@ export class SideBarComponent {
   // Navigation methods with automatic sidebar closing on mobile
   private navigateAndClose(path: string) {
     this.router.navigate([path]);
-    this.closeSidebar();
+    if (this.isMobile) {
+      this.closeSidebar();
+    }
   }
 
   goToDashboard() {
