@@ -43,7 +43,18 @@
       />
       <div class="error" id="passwordError"></div>
     </div>
-
+    <div class="form-group">
+      <label for="societyId">Society ID</label>
+      <input
+        type="text"
+        class="form-control"
+        id="societyId"
+        [(ngModel)]="societyId"
+        name="societyId"
+        required
+      />
+      <div class="error" id="societyIdError"></div>
+    </div>
     <div class="form-group">
       <label for="role">Role</label>
       <select
@@ -59,8 +70,11 @@
       <div class="error" id="roleError"></div>
     </div>
 
-    <button type="submit" class="register-btn" id="registerButton">Sign Up</button>
-  </form><div class="signin-link">
+    <button type="submit" class="register-btn" id="registerButton">
+      Sign Up
+    </button>
+  </form>
+  <div class="signin-link">
     <p>Already have an account? <button (click)="onLogin()">Sign In</button></p>
   </div>
 </div>

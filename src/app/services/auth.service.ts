@@ -1,8 +1,20 @@
 import { Injectable } from '@angular/core';
 import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
-import { signInWithEmailAndPassword as firebaseSignIn, createUserWithEmailAndPassword as firebaseCreateUser } from '@angular/fire/auth';
+import {
+  signInWithEmailAndPassword as firebaseSignIn,
+  createUserWithEmailAndPassword as firebaseCreateUser,
+} from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
+import {
+  Firestore,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  setDoc,
+  where,
+} from '@angular/fire/firestore';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 
 @Injectable({
@@ -11,9 +23,13 @@ import { BehaviorSubject, firstValueFrom } from 'rxjs';
 export class AuthService {
   private userState = new BehaviorSubject<User | null>(null);
   user$ = this.userState.asObservable();
-  isAuthLoaded = false; 
+  isAuthLoaded = false;
 
-  constructor(private auth: Auth, private firestore: Firestore, private router: Router) {
+  constructor(
+    private auth: Auth,
+    private firestore: Firestore,
+    private router: Router
+  ) {
     onAuthStateChanged(this.auth, async (user) => {
       this.userState.next(user);
       this.isAuthLoaded = true;
@@ -23,7 +39,7 @@ export class AuthService {
         const userDoc = await getDoc(userDocRef);
         if (userDoc.exists()) {
           const userData = userDoc.data();
-          
+
           // Only redirect if user is on the login page (to prevent forcing them to dashboard on refresh)
           if (this.router.url === '/auth/login') {
             if (userData['role'] === 'admin') {
@@ -66,31 +82,40 @@ export class AuthService {
     }
   }
 
-  async register(email: string, password: string, role: 'admin' | 'member', username: string) {
+  async register(email: string, password: string, role: 'admin' | 'member', username: string, societyId: string) {
     try {
+      // First create the Firebase Auth user
       const userCredential = await firebaseCreateUser(this.auth, email, password);
       const user = userCredential.user;
       if (!user) throw new Error('No user created');
-
+  
+      // Wait a moment to ensure Firebase Auth is fully processed
+      await new Promise(resolve => setTimeout(resolve, 1000));
+  
+      // Then create the user document in Firestore
       const userDocRef = doc(this.firestore, 'users', user.uid);
       await setDoc(userDocRef, {
         uid: user.uid,
         email: email,
         role: role,
         username: username,
-        createdAt: new Date().toISOString(),
+        societyId: societyId,
+        createdAt: new Date().toISOString()
       });
-
+  
       this.userState.next(user);
       this.isAuthLoaded = true;
-
-      // Redirect **only on registration**
+  
       if (role === 'admin') {
         await this.router.navigate(['/admin']);
       } else {
         await this.router.navigate(['/dashboard']);
       }
     } catch (error) {
+      // If Firestore document creation fails, delete the auth user
+      if (this.auth.currentUser) {
+        await this.auth.currentUser.delete();
+      }
       console.error('Registration error:', error);
       throw error;
     }
@@ -114,5 +139,13 @@ export class AuthService {
 
     const userDoc = await getDoc(doc(this.firestore, 'users', user.uid));
     return userDoc.exists() && userDoc.data()['role'] === 'admin';
+  }
+  async getCurrentUserSocietyId(): Promise<string | null> {
+    const user = await firstValueFrom(this.user$);
+    if (!user) {
+      return null;
+    }
+    const userDoc = await getDoc(doc(this.firestore, 'users', user.uid));
+    return userDoc.exists() ? userDoc.data()['societyId'] : null;
   }
 }

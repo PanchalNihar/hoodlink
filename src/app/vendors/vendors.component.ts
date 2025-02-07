@@ -20,7 +20,7 @@ import { Vendor, VendorService } from '../services/vendor.service';
   styleUrls: ['./vendors.component.css']
 })
 export class VendorsComponent implements OnInit {
-  vendors$: Observable<Vendor[]>;
+  vendors$: Observable<Vendor[]>|null=null;
   vendorForm: FormGroup;
   isAdmin = false;
   isEditing = false;
@@ -31,11 +31,11 @@ export class VendorsComponent implements OnInit {
     private authService: AuthService,
     private fb: FormBuilder
   ) {
-    this.vendors$ = this.vendorService.getVendors();
     this.vendorForm = this.createVendorForm();
   }
 
   async ngOnInit() {
+    this.vendors$=await this.vendorService.getVendors()
     this.isAdmin = await this.authService.isAdmin();
   }
 

@@ -34,7 +34,7 @@ export class DocumentsComponent implements OnInit {
     this.uploadStatus$ = this.docService.uploadStatus$;
   }
   async ngOnInit() {
-    this.documents$ = this.docService.getDocuments();
+    this.documents$ =await this.docService.getDocuments();
     this.isAdmin = await this.authService.isAdmin();
   }
   getDocumentCount(categoryName: string, documents: Document[] | null): number {

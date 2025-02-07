@@ -60,7 +60,7 @@ export class NotificationsComponent implements OnInit {
   }
   async ngOnInit() {
     try {
-      this.notifications$ = this.notificationService.getNotifications();
+      this.notifications$ =await this.notificationService.getNotifications();
       this.isAdmin = await this.authService.isAdmin();
       if (!this.isAdmin) {
         this.checkUnreadNotifications();

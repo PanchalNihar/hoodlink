@@ -10,6 +10,7 @@ import {
   orderBy,
   query,
   Unsubscribe,
+  where,
 } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
 import { BehaviorSubject, firstValueFrom, from, map, Observable } from 'rxjs';
@@ -47,49 +48,52 @@ export class DocumentsService {
   uploadStatus$ = this.uploadStatusSubject.asObservable();
   private unsubscribe: Unsubscribe | null = null;
   constructor(private firestore: Firestore, private authService: AuthService) {
-    this.setupRealtimeUpdates()
+    this.setupRealtimeUpdates();
   }
-  private setupRealtimeUpdates() {
+  private async setupRealtimeUpdates() {
+    const societyId = await this.authService.getCurrentUserSocietyId();
+    if (!societyId) {
+      throw new Error('No Society Found');
+    }
     const docRef = collection(this.firestore, 'documents');
-    const docQuery = query(docRef, orderBy('createdAt', 'desc'));
+    const docQuery = query(
+      docRef,
+      where('societyId', '==', societyId),
+      orderBy('createdAt', 'desc')
+    );
 
     // Store the unsubscribe function
     this.unsubscribe = onSnapshot(docQuery, {
       next: (snapshot) => {
-        const documents = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        } as Document));
+        const documents = snapshot.docs.map(
+          (doc) =>
+            ({
+              id: doc.id,
+              ...doc.data(),
+            } as Document)
+        );
         this.documentsSubject.next(documents);
       },
       error: (error) => {
         console.error('Documents subscription error:', error);
-      }
-    });}
-  // private initializeDocumentsListener() {
-  //   const docRef = collection(this.firestore, 'documents');
-  //   const docQuery = query(docRef, orderBy('createdAt', 'desc'));
-
-  //   // Set up real-time listener
-  //   onSnapshot(docQuery, (snapshot) => {
-  //     const documents = snapshot.docs.map(doc => ({
-  //       id: doc.id,
-  //       ...doc.data()
-  //     } as Document));
-  //     this.documentsSubject.next(documents); 
-  //   });
-  // }
+      },
+    });
+  }
   async uploadDocuments(
     file: File,
     title: string,
     category: string
   ): Promise<void> {
     try {
+      const societyId = await this.authService.getCurrentUserSocietyId();
+      if (!societyId) {
+        throw new Error('No Society Found');
+      }
       this.uploadStatusSubject.next({
         isUploading: true,
         progress: 0,
         message: 'Starting upload...',
-        type: 'info'
+        type: 'info',
       });
       const user = await firstValueFrom(this.authService.user$);
       if (!user) {
@@ -108,6 +112,7 @@ export class DocumentsService {
         title: title,
         fileUrl: fileUrl,
         createdBy: user.uid,
+        societyId: societyId,
         createdAt: new Date().toISOString(),
         category: category,
         size: file.size / 1024,
@@ -117,14 +122,14 @@ export class DocumentsService {
         isUploading: false,
         progress: 100,
         message: 'File uploaded successfully!',
-        type: 'success'
+        type: 'success',
       });
       setTimeout(() => {
         this.uploadStatusSubject.next({
           isUploading: false,
           progress: 0,
           message: '',
-          type: 'info'
+          type: 'info',
         });
       }, 3000);
       // this.uploadProgress.next(100);
@@ -152,9 +157,13 @@ export class DocumentsService {
       reader.readAsDataURL(file);
     });
   }
-  getDocuments(): Observable<Document[]> {
+  async getDocuments(): Promise<Observable<Document[]>> {
+    const societyId=await this.authService.getCurrentUserSocietyId()
+    if(!societyId){
+      throw new Error("Society Not Found")
+    }
     const docRef = collection(this.firestore, 'documents');
-    const docQuery = query(docRef, orderBy('createdAt', 'desc'));
+    const docQuery = query(docRef, where('societyId','==',societyId),orderBy('createdAt', 'desc'));
     return from(getDocs(docQuery)).pipe(
       map((snapshot) =>
         snapshot.docs.map(
@@ -167,9 +176,10 @@ export class DocumentsService {
       )
     );
   }
-  getDocumentByCategory(category: string): Observable<Document[]> {
-    return this.getDocuments().pipe(
-      map((document) => document.filter((doc) => doc.category === category))
+  async getDocumentByCategory(category: string): Promise<Observable<Document[]>> {
+    const documents$ = await this.getDocuments(); // Resolve the Promise
+    return documents$.pipe(
+      map((documents) => documents.filter((doc) => doc.category === category))
     );
   }
   async deleteDocument(document: Document): Promise<void> {

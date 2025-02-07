@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, query, orderBy } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, query, orderBy, where } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
 import { Observable, from, map } from 'rxjs';
 
 export interface Vendor {
   id?: string | null;  // Updated type to include null
   name: string;
+  societyId:string;
   contact: string;
   email: string;
   services: string[];
@@ -24,6 +25,10 @@ export class VendorService {
   ) {}
 
   async addVendor(vendor: Omit<Vendor, 'id' | 'createdAt'>): Promise<void> {
+    const societyId=await this.authService.getCurrentUserSocietyId()
+    if(!societyId){
+      throw new Error("Society Not Found")
+    }
     const isAdmin = await this.authService.isAdmin();
     if (!isAdmin) {
       throw new Error('Unauthorized: Only admins can add vendors');
@@ -31,6 +36,7 @@ export class VendorService {
 
     const vendorData: Omit<Vendor, 'id'> = {
       ...vendor,
+      societyId,
       createdAt: new Date().toISOString()
     };
 
@@ -38,9 +44,13 @@ export class VendorService {
     await addDoc(vendorsRef, vendorData);
   }
 
-  getVendors(): Observable<Vendor[]> {
+  async getVendors(): Promise<Observable<Vendor[]>> {
+    const societyId=await this.authService.getCurrentUserSocietyId()
+    if(!societyId){
+      throw new Error("Society Not Found")
+    }
     const vendorsRef = collection(this.firestore, this.collectionName);
-    const q = query(vendorsRef, orderBy('createdAt', 'desc'));
+    const q = query(vendorsRef, where('societyId','==',societyId),orderBy('createdAt', 'desc'));
     
     return from(getDocs(q)).pipe(
       map(snapshot => 

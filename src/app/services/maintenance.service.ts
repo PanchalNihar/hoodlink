@@ -15,9 +15,10 @@ import { BehaviorSubject, first, firstValueFrom, Observable } from 'rxjs';
 export interface Maintenance {
   id?: string;
   userId: string;
+  societyId: string;
   description: string;
   amount: number;
-  dueDate:string,
+  dueDate: string;
   status: 'pending' | 'in_progress' | 'completed';
   priority: 'high' | 'medium' | 'low';
   reportedDate: string;
@@ -41,8 +42,13 @@ export class MaintenanceService {
   async loadMaintenanceStat() {
     const isAdmin = await this.authService.isAdmin();
     const user = await firstValueFrom(this.authService.user$);
+    const societyId = await this.authService.getCurrentUserSocietyId();
+    if (!societyId) {
+      throw new Error('Society Not Found');
+    }
     const maintenanceRef = collection(this.firestore, 'maintenance');
-    let q = query(maintenanceRef);
+
+    let q = query(maintenanceRef, where('societyId', '==', societyId));
     if (!isAdmin) {
       q = query(maintenanceRef, where('userid', '==', user?.uid));
     }
@@ -71,23 +77,37 @@ export class MaintenanceService {
   getMaintenanceStat(): Observable<any> {
     return this.maintenanceStat.asObservable();
   }
-   getActicveRequest(): Observable<Maintenance[]> {
+  async getActicveRequest(): Promise<Observable<Maintenance[]>> {
     const maintenanceRef = collection(this.firestore, 'maintenance');
-    const q = query(maintenanceRef, where('status', 'in', ['pending', 'in_progress','completed']));
+    const societyId = await this.authService.getCurrentUserSocietyId();
+    if (!societyId) {
+      throw new Error('Society Not Found');
+    }
+    const q = query(
+      maintenanceRef,
+      where('status', 'in', ['pending', 'in_progress', 'completed']),
+      where('societyId','==',societyId)
+    );
     return collectionData(q, { idField: 'id' }) as Observable<Maintenance[]>;
   }
-  async createMaintenanceRequest(request: Omit<Maintenance, 'id' | 'status' | 'reportedDate' | 'userId'>) {
+  async createMaintenanceRequest(
+    request: Omit<Maintenance, 'id' | 'status' | 'reportedDate' | 'userId' | 'societyId'>
+  ) {
     try {
-      const user = await firstValueFrom(this.authService.user$)
+      const user = await firstValueFrom(this.authService.user$);
       if (!user) throw new Error('User not authenticated');
-
+      const societyId=await this.authService.getCurrentUserSocietyId()
+      if(!societyId){
+        throw new Error('Society Not Found')
+      }
       const maintenanceRef = collection(this.firestore, 'maintenance');
       const newRequest = {
         ...request,
         userId: user.uid,
+        societyId:societyId,
         status: 'pending',
         reportedDate: new Date().toISOString(),
-        dueDate: new Date(request.dueDate).toISOString()
+        dueDate: new Date(request.dueDate).toISOString(),
       };
 
       await addDoc(maintenanceRef, newRequest);
@@ -103,7 +123,7 @@ export class MaintenanceService {
       if (!isAdmin) {
         throw new Error('Only admins can update request status');
       }
-      
+
       const requestRef = doc(this.firestore, 'maintenance', requestId);
       await updateDoc(requestRef, { status });
       await this.loadMaintenanceStat();
@@ -113,4 +133,3 @@ export class MaintenanceService {
     }
   }
 }
-

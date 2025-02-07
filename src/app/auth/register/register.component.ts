@@ -14,9 +14,10 @@ export class RegisterComponent {
   email: string = '';
   password: string = '';
   role: 'admin' | 'member' = 'member';
+  societyId:string=''
   constructor(private authService:AuthService,private router:Router){}
   register(){
-    this.authService.register(this.email,this.password,this.role,this.username).catch((error)=>{
+    this.authService.register(this.email,this.password,this.role,this.username,this.societyId).catch((error)=>{
       alert(error.message)
     })
   }

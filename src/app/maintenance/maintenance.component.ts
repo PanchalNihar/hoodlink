@@ -55,9 +55,14 @@ export class MaintenanceComponent implements OnInit, OnDestroy {
       );
 
       // Subscribe to active requests updates
+      const activeRequestsObservable =
+        await this.maintenanceService.getActicveRequest();
       this.subscriptions.push(
-        this.maintenanceService.getActicveRequest().subscribe((requests) => {
+        activeRequestsObservable.subscribe((requests) => {
           this.activeRequest = requests;
+          if (this.currentFilter) {
+            this.filterRequestsByStatus(this.currentFilter);
+          }
         })
       );
     } catch (error) {
@@ -71,10 +76,12 @@ export class MaintenanceComponent implements OnInit, OnDestroy {
 
   filterRequestsByStatus(status: Maintenance['status']) {
     this.currentFilter = status;
-    this.filteredRequests = this.activeRequest.filter(request => request.status === status);
-    
+    this.filteredRequests = this.activeRequest.filter(
+      (request) => request.status === status
+    );
+
     // Update view title and subtitle based on filter
-    switch(status) {
+    switch (status) {
       case 'pending':
         this.currentViewTitle = 'Pending Maintenance Requests';
         this.currentViewSubtitle = 'Requests awaiting action';

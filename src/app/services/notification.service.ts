@@ -20,6 +20,7 @@ export interface Notification {
   message: string;
   createdAt: Date;
   isRead: string;
+  societyId:string;
   type?: 'info' | 'alert' | 'success';
   recipientIds?: string[];
 }
@@ -29,13 +30,18 @@ export interface Notification {
 export class NotificationService {
   private notificationsCollection = 'notifications';
   constructor(private firestore: Firestore, private authService: AuthService) {}
-  getNotifications(): Observable<Notification[]> {
+  async getNotifications(): Promise<Observable<Notification[]>> {
+    const societyId=await this.authService.getCurrentUserSocietyId()
+    if(!societyId){
+      throw new Error("Society Not Found")
+    }
     const notificationRef = collection(
       this.firestore,
       this.notificationsCollection
     );
     const notificationsQuery = query(
       notificationRef,
+      where('societyId','==',societyId),
       orderBy('createdAt', 'desc')
     );
     return collectionData(notificationsQuery, { idField: 'id' }).pipe(
@@ -46,11 +52,13 @@ export class NotificationService {
     notification: Omit<Notification, 'id' | 'createdAt' | 'isRead'>
   ) {
     const isAdmin = await this.authService.isAdmin();
+    const societyId=await this.authService.getCurrentUserSocietyId()
     if (!isAdmin) {
       throw new Error('Only admins can create notifications');
     }
     const notificationData = {
       ...notification,
+      societyId,
       createdAt: new Date(),
       isRead: false,
     };

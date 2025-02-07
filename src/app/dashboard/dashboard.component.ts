@@ -81,6 +81,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         console.error('Error getting users count:', error);
       }
     }
+
     const complaintSub = this.complaintService.complaint$
       .pipe(
         map(
@@ -91,20 +92,27 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .subscribe((count) => {
         this.updateStats({ activeComplaints: count });
       });
-    const notificationSub = this.notificationService
-      .getNotifications()
-      .pipe(
-        map((notifications) => notifications.filter((n) => !n.isRead).length)
-      )
-      .subscribe((count) => {
-        this.updateStats({ unreadNotifications: count });
-      });
-    const documentSub = this.documentService.documents$
-      .pipe(map((documents) => documents.length))
-      .subscribe((count) => {
-        this.updateStats({ totalDocuments: count });
-      });
-    this.subscriptions.push(complaintSub, notificationSub, documentSub);
+
+    try {
+      const notifications$ = await this.notificationService.getNotifications();
+      const notificationSub = notifications$
+        .pipe(
+          map((notifications) => notifications.filter((n) => !n.isRead).length)
+        )
+        .subscribe((count) => {
+          this.updateStats({ unreadNotifications: count });
+        });
+
+      const documentSub = this.documentService.documents$
+        .pipe(map((documents) => documents.length))
+        .subscribe((count) => {
+          this.updateStats({ totalDocuments: count });
+        });
+
+      this.subscriptions.push(complaintSub, notificationSub, documentSub);
+    } catch (error) {
+      console.error('Error initializing notifications:', error);
+    }
   }
   private updateStats(newStats: Partial<DashboardStats>) {
     const currentStats = this.statsSubject.value;

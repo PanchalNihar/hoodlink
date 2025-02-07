@@ -9,12 +9,14 @@ import {
   orderBy,
   query,
   updateDoc,
+  where,
 } from '@angular/fire/firestore';
 import { BehaviorSubject, map, firstValueFrom } from 'rxjs';
 import { AuthService } from './auth.service';
 export interface Complaint {
   id: string;
   userId: string;
+  societyId:string;
   status: 'pending' | 'resolved';
   type: 'text' | 'photo' | 'video';
   content: string;
@@ -32,8 +34,13 @@ export class ComplaintService {
   }
   async loadComplaints() {
     try {
+      const societyId=await this.authService.getCurrentUserSocietyId()
+      console.log("Soc Id",societyId)
+      if(!societyId){
+        throw new Error("Society Not found")
+      }
       const complaintRef = collection(this.firestore, 'complaints');
-      const q = query(complaintRef, orderBy('createdAt', 'desc'));
+      const q = query(complaintRef, where('societyId','==',societyId),orderBy('createdAt', 'desc'));
       const snapShot = await getDocs(q);
       const complaints = snapShot.docs.map((doc) => ({
         id: doc.id,
@@ -50,7 +57,10 @@ async addComplaint(content: string, type: 'text' | 'photo' | 'video') {
   try {
     const user = await firstValueFrom(this.authService.user$);
     if (!user) throw new Error('User not authenticated');
-
+    const societyId=await this.authService.getCurrentUserSocietyId()
+    if(!societyId){
+      throw new Error("Society Not found")
+    }
     // Get the user document from Firestore to access the username
     const userDocRef = doc(this.firestore, 'users', user.uid);
     const userDoc = await getDoc(userDocRef);
@@ -63,6 +73,7 @@ async addComplaint(content: string, type: 'text' | 'photo' | 'video') {
     
     const complaint: Omit<Complaint, 'id'> = {
       userId: user.uid,
+      societyId:societyId,
       status: 'pending',
       type,
       content,
