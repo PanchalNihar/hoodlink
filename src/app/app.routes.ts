@@ -12,11 +12,12 @@ import { ComplaintComponent } from './complaint/complaint.component';
 import { DocumentsComponent } from './documents/documents.component';
 import { VendorsComponent } from './vendors/vendors.component';
 import { ProfileComponent } from './profile/profile.component';
+import { AboutComponent } from './about/about.component';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'auth/login',
+    redirectTo: 'about',
     pathMatch: 'full',
   },
   {
@@ -30,6 +31,10 @@ export const routes: Routes = [
   {
     path: 'auth/forgot-password',
     component: ForgotPasswordComponent,
+  },
+  {
+    path:'about',
+    component:AboutComponent
   },
   {
     path: 'dashboard',

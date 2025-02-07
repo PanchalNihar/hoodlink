@@ -1,0 +1,73 @@
+:root {
+    --primary-color: #4a6cf7;
+    --secondary-color: #6b7280;
+    --text-color: #1f2937;
+    --bg-light: #f3f4f6;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.hero-section {
+    background: linear-gradient(135deg, rgba(74, 108, 247, 0.9), rgba(59, 130, 246, 0.9)), 
+                url('/api/placeholder/1200/400') center/cover;
+    color: white;
+    padding: 120px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.feature-card {
+    background: white;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    margin-bottom: 30px;
+    height: 100%;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+}
+
+.feature-icon {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    transition: transform 0.3s ease;
+}
+
+.detailed-description {
+    background-color: var(--bg-light);
+    padding: 60px 0;
+}
+
+.detailed-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    padding: 30px;
+    margin-bottom: 30px;
+    transition: transform 0.3s ease;
+}
+
+.detailed-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+.detailed-card h4 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.tech-icon {
+    color: var(--primary-color);
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
