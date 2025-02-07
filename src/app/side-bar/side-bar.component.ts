@@ -80,7 +80,9 @@ export class SideBarComponent {
   goToVendors() {
     this.navigateAndClose('/vendors');
   }
-
+  goToProfile(){
+    this.navigateAndClose('/profile');
+  }
   async logout() {
     await this.authService.signOut();
     this.navigateAndClose('/auth/login');

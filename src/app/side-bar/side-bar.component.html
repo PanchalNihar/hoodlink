@@ -17,6 +17,12 @@
   <nav class="nav-menu">
     <ul class="nav-list">
       <li class="nav-item" [routerLinkActive]="'active'">
+        <a (click)="goToProfile()" class="nav-link">
+          <i class="fas fa-user"></i>
+          <span class="link-text" [class.hide-text]="isCollapsed && !isMobile">My Profile</span>
+        </a>
+      </li>
+      <li class="nav-item" [routerLinkActive]="'active'">
         <a (click)="goToDashboard()" class="nav-link">
           <i class="fas fa-home"></i>
           <span class="link-text" [class.hide-text]="isCollapsed && !isMobile">Dashboard</span>

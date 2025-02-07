@@ -27,8 +27,20 @@
 
         <div class="info-grid">
           <div class="info-item">
+            <label>User Name</label>
+            <p>{{ userProfile.username || "N/A" }}</p>
+          </div>
+          <div class="info-item">
             <label>Email</label>
             <p>{{ userProfile.email || "N/A" }}</p>
+          </div>
+          <div class="info-item">
+            <label>Member Since</label>
+            <p>{{ userProfile.createdAt | date : "mediumDate" }}</p>
+          </div>
+          <div class="info-item">
+            <label>Society Name</label>
+            <p>{{ userProfile.societyName }}</p>
           </div>
           <div class="info-item">
             <label>Phone</label>
@@ -37,10 +49,6 @@
           <div class="info-item">
             <label>Address</label>
             <p>{{ userProfile.address || "Not provided" }}</p>
-          </div>
-          <div class="info-item">
-            <label>Member Since</label>
-            <p>{{ userProfile.createdAt | date : "mediumDate" }}</p>
           </div>
         </div>
       </div>

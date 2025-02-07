@@ -14,6 +14,7 @@ interface UserProfile {
   createdAt?: string;
   phone?: string;
   address?: string;
+  societyName: string;
 }
 
 @Component({
@@ -21,18 +22,20 @@ interface UserProfile {
   standalone: true,
   imports: [CommonModule, SideBarComponent, FormsModule],
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
+  styleUrls: ['./profile.component.css'],
 })
 export class ProfileComponent implements OnInit {
   user: User | null = null;
-  userProfile: UserProfile = {};
+  userProfile: UserProfile = {
+    societyName: '',
+  };
   isLoading = true;
   isEditing = false;
 
   constructor(
-    private authService: AuthService, 
+    private authService: AuthService,
     private firestore: Firestore,
-    private router:Router
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -48,9 +51,10 @@ export class ProfileComponent implements OnInit {
     try {
       const userDocRef = doc(this.firestore, 'users', uid);
       const userDoc = await getDoc(userDocRef);
-      
+      const societyId = await this.authService.getCurrentUserSocietyId();
       if (userDoc.exists()) {
         this.userProfile = userDoc.data() as UserProfile;
+        this.userProfile.societyName = societyId ?? '';
       }
       this.isLoading = false;
     } catch (error) {
@@ -75,7 +79,7 @@ export class ProfileComponent implements OnInit {
       console.error('Error saving profile:', error);
     }
   }
-  goToDashboard(){
+  goToDashboard() {
     this.router.navigate(['/dashboard']);
   }
 }
