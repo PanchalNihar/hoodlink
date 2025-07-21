@@ -1,0 +1,31 @@
+name: Deploy Angular App to Vercel
+
+on:
+  push:
+    branches: [master]   # Change this if your main branch is named differently
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Angular app
+        run: npm run build --if-present
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+
+      - name: Deploy to Vercel
+        run: |
+            vercel --prod --token ${{ secrets.VERCEL_AUTH_TOKEN }} --confirm --cwd ./dist/hoodlink      
